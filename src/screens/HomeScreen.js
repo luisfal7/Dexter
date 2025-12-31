@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CategoryCard from '../components/CategoryCard';
@@ -86,6 +86,10 @@ const HomeScreen = ({ navigation }) => {
 
                     <PokemonNews />
 
+                    <TouchableOpacity style={styles.policyButton} onPress={() => navigation.navigate('PrivacyPolicy')}>
+                        <Text style={styles.policyText}>Privacy Policy</Text>
+                    </TouchableOpacity>
+
                 </ScrollView>
             </SafeAreaView>
         </View>
@@ -160,8 +164,15 @@ const styles = StyleSheet.create({
     card: {
         flex: 1, // Grid specific
     },
-    card: {
-        flex: 1, // Grid specific
+    policyButton: {
+        alignItems: 'center',
+        padding: 20,
+        marginBottom: 20,
+    },
+    policyText: {
+        color: colors.grey,
+        fontSize: 14,
+        textDecorationLine: 'underline',
     },
 });
 

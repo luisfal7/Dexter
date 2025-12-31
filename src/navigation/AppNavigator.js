@@ -7,6 +7,7 @@ import PokemonListScreen from '../screens/PokemonListScreen';
 import PokemonDetailScreen from '../screens/PokemonDetailScreen';
 import GenerationsListScreen from '../screens/GenerationsListScreen';
 import NewsListScreen from '../screens/NewsListScreen';
+import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
 import { colors } from '../theme/colors';
 
 const Stack = createStackNavigator();
@@ -27,6 +28,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="PokemonDetail" component={PokemonDetailScreen} />
                 <Stack.Screen name="GenerationsList" component={GenerationsListScreen} />
                 <Stack.Screen name="NewsList" component={NewsListScreen} />
+                <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

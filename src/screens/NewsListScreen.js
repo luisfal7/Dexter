@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator, TouchableOpacity, Linking, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator, TouchableOpacity, Linking } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import * as rssParser from 'react-native-rss-parser';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
