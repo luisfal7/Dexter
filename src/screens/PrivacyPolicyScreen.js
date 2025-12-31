@@ -12,62 +12,62 @@ const PrivacyPolicyScreen = ({ navigation }) => {
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                     <Ionicons name="arrow-back" size={28} color={colors.text} />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Política de Privacidad</Text>
+                <Text style={styles.headerTitle}>Privacy Policy</Text>
             </View>
 
             <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
-                <Text style={styles.lastUpdate}>Última actualización: 31 de diciembre de 2025</Text>
+                <Text style={styles.lastUpdate}>Last updated: December 31, 2025</Text>
                 <Text style={styles.paragraph}>
-                    Esta Política de Privacidad describe cómo se gestionan los datos en la aplicación <Text style={styles.bold}>Pokedex App</Text>, desarrollada por <Text style={styles.bold}>luisfal7</Text>.
+                    This Privacy Policy describes how data is handled in the <Text style={styles.bold}>Pokedex App</Text>, developed by <Text style={styles.bold}>luisfal7</Text>.
                 </Text>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>1. Recopilación de Información</Text>
+                    <Text style={styles.sectionTitle}>1. Information Collection</Text>
                     <Text style={styles.paragraph}>
-                        Nuestra aplicación es puramente informativa. <Text style={styles.bold}>No recopilamos, solicitamos ni almacenamos ningún tipo de información personal</Text> identificable de los usuarios (como nombres, correos electrónicos, ubicaciones o archivos del dispositivo).
+                        Our application is purely informative. <Text style={styles.bold}>We do not collect, request, or store any personally identifiable information</Text> from users (such as names, emails, locations, or device files).
                     </Text>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>2. Uso de APIs de Terceros</Text>
+                    <Text style={styles.sectionTitle}>2. Use of Third-Party APIs</Text>
                     <Text style={styles.paragraph}>
-                        La aplicación utiliza los siguientes servicios para funcionar, los cuales tienen sus propias políticas de privacidad:
+                        The application uses the following services to function, which have their own privacy policies:
                     </Text>
                     <View style={styles.listItem}>
                         <Text style={styles.bullet}>•</Text>
-                        <Text style={styles.paragraph}><Text style={styles.bold}>PokeAPI:</Text> Utilizada para obtener datos estadísticos de los Pokémon.</Text>
+                        <Text style={styles.paragraph}><Text style={styles.bold}>PokeAPI:</Text> Used to obtain statistical data about Pokémon.</Text>
                     </View>
                     <View style={styles.listItem}>
                         <Text style={styles.bullet}>•</Text>
-                        <Text style={styles.paragraph}><Text style={styles.bold}>Google News RSS:</Text> Utilizado para mostrar noticias de actualidad. Al hacer clic en una noticia, el usuario es redirigido a sitios web externos de terceros.</Text>
+                        <Text style={styles.paragraph}><Text style={styles.bold}>Google News RSS:</Text> Used to display current news. When clicking on a news item, the user is redirected to third-party external websites.</Text>
                     </View>
                     <View style={styles.listItem}>
                         <Text style={styles.bullet}>•</Text>
-                        <Text style={styles.paragraph}><Text style={styles.bold}>GitHub:</Text> El código fuente está alojado en GitHub, pero no recopilamos datos de los visitantes a través de la app.</Text>
+                        <Text style={styles.paragraph}><Text style={styles.bold}>GitHub:</Text> The source code is hosted on GitHub, but we do not collect data from visitors through the app.</Text>
                     </View>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>3. Privacidad Infantil</Text>
+                    <Text style={styles.sectionTitle}>3. Children's Privacy</Text>
                     <Text style={styles.paragraph}>
-                        Cumplimos con las normativas de protección de menores. Dado que no recopilamos ningún dato, la aplicación es segura para usuarios de todas las edades, incluidos niños menores de 13 años.
+                        We comply with child protection regulations. Since we do not collect any data, the application is safe for users of all ages, including children under 13.
                     </Text>
                 </View>
 
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>4. Permisos de la Aplicación</Text>
+                    <Text style={styles.sectionTitle}>4. Application Permissions</Text>
                     <Text style={styles.paragraph}>
-                        La aplicación solo requiere permiso de <Text style={styles.bold}>Acceso a Internet</Text> para descargar la información de los Pokémon y las noticias en tiempo real.
+                        The application only requires <Text style={styles.bold}>Internet Access</Text> permission to download Pokémon information and real-time news.
                     </Text>
                 </View>
 
                 <View style={styles.contactSection}>
-                    <Text style={styles.sectionTitle}>5. Contacto</Text>
+                    <Text style={styles.sectionTitle}>5. Contact</Text>
                     <View style={styles.contactBox}>
-                        <Text style={styles.paragraph}>Si tienes alguna duda sobre esta política, puedes contactarme a través de mi perfil de GitHub:</Text>
-                        <Text style={styles.paragraph}><Text style={styles.bold}>Desarrollador:</Text> luisfal7</Text>
+                        <Text style={styles.paragraph}>If you have any questions about this policy, you can contact me through my GitHub profile:</Text>
+                        <Text style={styles.paragraph}><Text style={styles.bold}>Developer:</Text> luisfal7</Text>
                         <TouchableOpacity onPress={() => Linking.openURL('https://github.com/luisfal7/Pokedex-App')}>
-                            <Text style={styles.link}><Text style={styles.bold}>Proyecto:</Text> Pokedex-App</Text>
+                            <Text style={styles.link}><Text style={styles.bold}>Project:</Text> Pokedex-App</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
