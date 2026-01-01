@@ -18,7 +18,7 @@ const PrivacyPolicyScreen = ({ navigation }) => {
             <ScrollView style={styles.content} contentContainerStyle={styles.scrollContent}>
                 <Text style={styles.lastUpdate}>Last updated: December 31, 2025</Text>
                 <Text style={styles.paragraph}>
-                    This Privacy Policy describes how data is handled in the <Text style={styles.bold}>Pokedex App</Text>, developed by <Text style={styles.bold}>luisfal7</Text>.
+                    This Privacy Policy describes how data is handled in the <Text style={styles.bold}>Dexter App</Text>, developed by <Text style={styles.bold}>luisfal7</Text>.
                 </Text>
 
                 <View style={styles.section}>
@@ -66,8 +66,8 @@ const PrivacyPolicyScreen = ({ navigation }) => {
                     <View style={styles.contactBox}>
                         <Text style={styles.paragraph}>If you have any questions about this policy, you can contact me through my GitHub profile:</Text>
                         <Text style={styles.paragraph}><Text style={styles.bold}>Developer:</Text> luisfal7</Text>
-                        <TouchableOpacity onPress={() => Linking.openURL('https://github.com/luisfal7/Pokedex-App')}>
-                            <Text style={styles.link}><Text style={styles.bold}>Project:</Text> Pokedex-App</Text>
+                        <TouchableOpacity onPress={() => Linking.openURL('https://github.com/luisfal7/Dexter')}>
+                            <Text style={styles.link}><Text style={styles.bold}>Project:</Text> Dexter-App</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
