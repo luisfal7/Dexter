@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "PokedexApp",
-    "slug": "PokedexApp",
+    "name": "Dexter",
+    "slug": "dexter",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,15 +21,16 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.lmfalconi7.PokedexApp"
+      "package": "com.lmfalconi7.dexter"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "a1d01ab0-5f89-4f7c-97b2-aa9d4dd94b3b"
+        "projectId": "dd500341-a5f9-485d-8a7f-8239dfc605f2"
       }
-    }
+    },
+    "owner": "lmfalconi7"
   }
 }
