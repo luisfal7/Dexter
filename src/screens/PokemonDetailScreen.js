@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import PokemonDetailContent from '../components/PokemonDetailContent';
+import PokemonDetailContent from '../components/pokemonDetail/PokemonDetailContent';
 
 const PokemonDetailScreen = ({ navigation, route }) => {
     const { pokemon, color } = route.params;

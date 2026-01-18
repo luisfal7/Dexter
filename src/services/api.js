@@ -90,4 +90,24 @@ export const getGenerationDetails = async (nameOrId) => {
     }
 };
 
+export const getEvolutionChain = async (url) => {
+    try {
+        const response = await api.get(url);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching evolution chain:', error);
+        throw error;
+    }
+};
+
+export const getTypeDetails = async (url) => {
+    try {
+        const response = await api.get(url);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching type details:', error);
+        throw error;
+    }
+};
+
 export default api;

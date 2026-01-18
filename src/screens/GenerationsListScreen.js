@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
 import { colors } from '../theme/colors';
 import metrics from '../theme/metrics';
 import CategoryCard from '../components/CategoryCard';
@@ -20,24 +21,13 @@ const genColors = [
 ];
 
 const GenerationsListScreen = ({ navigation }) => {
-    const [generations, setGenerations] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        fetchGenerations();
-    }, []);
-
-    const fetchGenerations = async () => {
-        try {
+    const { data: generations = [], isLoading: loading } = useQuery({
+        queryKey: ['generations'],
+        queryFn: async () => {
             const data = await getGenerations();
-            // data.results is array of { name: "generation-i", url: "..." }
-            setGenerations(data.results);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
+            return data.results;
         }
-    };
+    });
 
     const formatName = (name) => {
         // "generation-i" -> "Generation I"

@@ -2,64 +2,57 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useQuery } from '@tanstack/react-query';
 import { colors } from '../theme/colors';
 import metrics from '../theme/metrics';
 import PokemonCard from '../components/PokemonCard';
 import SearchBar from '../components/SearchBar';
 import { getPokemonsByType, getGenerationDetails } from '../services/api';
 
+const fetchPokemonList = async ({ type, generation }) => {
+    let formatted = [];
+
+    if (generation) {
+        const data = await getGenerationDetails(generation);
+        if (data && data.pokemon_species) {
+            formatted = data.pokemon_species.map(p => {
+                const urlParts = p.url.split('/');
+                const id = urlParts[urlParts.length - 2];
+                return {
+                    name: p.name,
+                    url: p.url,
+                    id: parseInt(id),
+                };
+            });
+            // Sort by ID for generations
+            formatted.sort((a, b) => a.id - b.id);
+        }
+    } else {
+        const searchType = type || 'grass';
+        const data = await getPokemonsByType(searchType);
+
+        if (data && data.pokemon) {
+            formatted = data.pokemon.map(p => {
+                const urlParts = p.pokemon.url.split('/');
+                const id = urlParts[urlParts.length - 2];
+                return {
+                    name: p.pokemon.name,
+                    url: p.pokemon.url,
+                    id: parseInt(id),
+                };
+            });
+        }
+    }
+    return formatted;
+};
+
 const PokemonListScreen = ({ navigation, route }) => {
     const { type, generation, title } = route.params || {};
-    const [pokemons, setPokemons] = useState([]);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchPokemons();
-    }, [type, generation]);
-
-    const fetchPokemons = async () => {
-        setLoading(true);
-        try {
-            let formatted = [];
-
-            if (generation) {
-                const data = await getGenerationDetails(generation);
-                if (data && data.pokemon_species) {
-                    formatted = data.pokemon_species.map(p => {
-                        const urlParts = p.url.split('/');
-                        const id = urlParts[urlParts.length - 2];
-                        return {
-                            name: p.name,
-                            url: p.url,
-                            id: parseInt(id),
-                        };
-                    });
-                    // Sort by ID for generations
-                    formatted.sort((a, b) => a.id - b.id);
-                }
-            } else {
-                const searchType = type || 'grass';
-                const data = await getPokemonsByType(searchType);
-
-                if (data && data.pokemon) {
-                    formatted = data.pokemon.map(p => {
-                        const urlParts = p.pokemon.url.split('/');
-                        const id = urlParts[urlParts.length - 2];
-                        return {
-                            name: p.pokemon.name,
-                            url: p.pokemon.url,
-                            id: parseInt(id),
-                        };
-                    });
-                }
-            }
-            setPokemons(formatted);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { data: pokemons = [], isLoading: loading } = useQuery({
+        queryKey: ['pokemonList', { type, generation }],
+        queryFn: () => fetchPokemonList({ type, generation }),
+    });
 
     const renderItem = ({ item }) => (
         <PokemonCard
