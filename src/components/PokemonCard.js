@@ -65,4 +65,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PokemonCard;
+export default React.memo(PokemonCard);
