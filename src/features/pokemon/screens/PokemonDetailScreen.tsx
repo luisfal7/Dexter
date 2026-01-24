@@ -2,7 +2,17 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import PokemonDetailContent from '../components/pokemonDetail/PokemonDetailContent';
 
-const PokemonDetailScreen = ({ navigation, route }) => {
+interface PokemonDetailScreenProps {
+    navigation: any; // Using explicit any for navigation for now as full typing is complex without navigation types file
+    route: {
+        params: {
+            pokemon: any;
+            color: string;
+        }
+    }
+}
+
+const PokemonDetailScreen: React.FC<PokemonDetailScreenProps> = ({ navigation, route }) => {
     const { pokemon, color } = route.params;
 
     return (

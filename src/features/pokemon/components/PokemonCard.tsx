@@ -3,7 +3,16 @@ import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 import { colors, metrics } from '../../../theme';
 
-const PokemonCard = ({ name, id, onPress, style }) => {
+import { StyleProp, ViewStyle } from 'react-native';
+
+interface PokemonCardProps {
+  name: string;
+  id: string | number;
+  onPress: () => void;
+  style?: StyleProp<ViewStyle>;
+}
+
+const PokemonCard: React.FC<PokemonCardProps> = ({ name, id, onPress, style }) => {
   const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
   const formattedId = `#${id.toString().padStart(3, '0')}`;
 

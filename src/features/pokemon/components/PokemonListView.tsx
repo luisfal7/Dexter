@@ -6,7 +6,25 @@ import { colors, metrics } from '../../../theme';
 import PokemonCard from './PokemonCard';
 import { SearchBar } from '../../../components';
 
-const PokemonListView = ({
+import { ListRenderItemInfo } from 'react-native';
+
+interface Pokemon {
+    name: string;
+    id: string | number;
+    url?: string;
+}
+
+interface PokemonListViewProps {
+    pokemons: Pokemon[];
+    loading: boolean;
+    onSelectPokemon: (pokemon: Pokemon) => void;
+    onBack: () => void;
+    title?: string;
+    type?: string;
+    generation?: string | number;
+}
+
+const PokemonListView: React.FC<PokemonListViewProps> = ({
     pokemons,
     loading,
     onSelectPokemon,
@@ -16,7 +34,7 @@ const PokemonListView = ({
     generation
 }) => {
 
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item }: ListRenderItemInfo<Pokemon>) => (
         <PokemonCard
             name={item.name}
             id={item.id}

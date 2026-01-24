@@ -8,9 +8,22 @@ import { colors } from '../../../../theme';
 import { getEvolutionChain } from '../../../../services';
 // ... imports
 
-const PokemonEvolution = ({ evolutionUrl, isShiny, currentPokemonId }) => {
-    const [evolutionChains, setEvolutionChains] = useState([]);
-    const [loading, setLoading] = useState(true);
+interface PokemonEvolutionProps {
+    evolutionUrl: string;
+    isShiny?: boolean;
+    currentPokemonId: string | number;
+}
+
+interface EvolutionChainNode {
+    id: string;
+    name: string;
+    evolutionDetails: any[];
+    url: string;
+}
+
+const PokemonEvolution: React.FC<PokemonEvolutionProps> = ({ evolutionUrl, isShiny, currentPokemonId }) => {
+    const [evolutionChains, setEvolutionChains] = useState<EvolutionChainNode[][]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const router = useRouter();
 
     useEffect(() => {
@@ -22,58 +35,16 @@ const PokemonEvolution = ({ evolutionUrl, isShiny, currentPokemonId }) => {
                 }
                 const data = await getEvolutionChain(evolutionUrl);
 
-                const chains = [];
+                const chains: EvolutionChainNode[][] = [];
                 let evolutionData = data.chain;
 
-                // Traverse the chain
-                // Current simplified logic for standard chains
-                // Note: deeply nested logic might need recursion but for now we flatten simply
-
-                // Helper to process chain recursively
-                const processChain = (startNode) => {
-                    const currentChain = [];
-                    let currentNode = startNode;
-
-                    while (currentNode) {
-                        const id = currentNode.species.url.split('/')[6];
-                        currentChain.push({
-                            id: id,
-                            name: currentNode.species.name,
-                            evolutionDetails: currentNode.evolution_details,
-                            url: currentNode.species.url
-                        });
-
-                        if (currentNode.evolves_to.length > 0) {
-                            // Branch handling could be complex. For now, take first path largely
-                            // But if multiple evolutions (e.g. Eevee), we need separate rows/chains
-                            if (currentNode.evolves_to.length > 1) {
-                                // Split here
-                                currentNode.evolves_to.forEach(ev => {
-                                    // This is a partial re-implementation logic from memory of typical poke-structure
-                                    // For a robust implementation we might want a recursive tree traversal that returns array of arrays (paths)
-                                });
-                                // Break simple loop for branching
-                                currentNode = null;
-                            } else {
-                                currentNode = currentNode.evolves_to[0];
-                            }
-                        } else {
-                            currentNode = null;
-                        }
-                    }
-                    return currentChain;
-                };
-
-                // Better flattened approach for UI:
-                // We want rows of evolutions.
-                // Simple case: A -> B -> C
-                // Branching: A -> B1
-                //              -> B2
+                // Helper to process chain recursively (not currently used but kept for ref)
+                // const processChain = (startNode: any): EvolutionChainNode[] => { ... }
 
                 // Let's use a queue standard BFS/DFS or just simpler recursion to build "lanes"
-                const buildPaths = (node, currentPath) => {
+                const buildPaths = (node: any, currentPath: EvolutionChainNode[]) => {
                     const id = node.species.url.split('/')[6];
-                    const pokemon = {
+                    const pokemon: EvolutionChainNode = {
                         id: id,
                         name: node.species.name,
                         evolutionDetails: node.evolution_details,
@@ -85,7 +56,7 @@ const PokemonEvolution = ({ evolutionUrl, isShiny, currentPokemonId }) => {
                     if (node.evolves_to.length === 0) {
                         chains.push(newPath);
                     } else {
-                        node.evolves_to.forEach(child => buildPaths(child, newPath));
+                        node.evolves_to.forEach((child: any) => buildPaths(child, newPath));
                     }
                 };
 
@@ -102,12 +73,13 @@ const PokemonEvolution = ({ evolutionUrl, isShiny, currentPokemonId }) => {
         fetchEvolution();
     }, [evolutionUrl]);
 
-    const handlePress = (pokemon) => {
+    const handlePress = (pokemon: EvolutionChainNode) => {
         if (pokemon.id === String(currentPokemonId)) return;
 
         router.push({
-            pathname: `/pokemon/${pokemon.id}`,
+            pathname: '/pokemon/[id]',
             params: {
+                id: pokemon.id,
                 name: pokemon.name,
                 url: pokemon.url,
                 color: colors.primary
@@ -115,7 +87,7 @@ const PokemonEvolution = ({ evolutionUrl, isShiny, currentPokemonId }) => {
         });
     };
 
-    const formatTriggerString = (detail) => {
+    const formatTriggerString = (detail: any) => {
         const triggers = [];
 
         // Level Up

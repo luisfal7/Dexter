@@ -2,7 +2,21 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const usePokemonStore = create(
+interface Pokemon {
+    id: string;
+    name: string;
+    [key: string]: any; // Allow other properties flexibility for now
+}
+
+interface PokemonStore {
+    favorites: Pokemon[];
+    addFavorite: (pokemon: Pokemon) => void;
+    removeFavorite: (pokemonId: string) => void;
+    isFavorite: (pokemonId: string) => boolean;
+    toggleFavorite: (pokemon: Pokemon) => void;
+}
+
+export const usePokemonStore = create<PokemonStore>()(
     persist(
         (set, get) => ({
             favorites: [],

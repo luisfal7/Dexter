@@ -7,7 +7,7 @@ const api = axios.create({
     timeout: 10000,
 });
 
-export const getPokemonList = async (limit = 20, offset = 0) => {
+export const getPokemonList = async (limit: number = 20, offset: number = 0) => {
     try {
         const response = await api.get(`/pokemon?limit=${limit}&offset=${offset}`);
         return response.data;
@@ -28,7 +28,7 @@ export const getAllPokemonNames = async () => {
 };
 
 
-export const getPokemonDetails = async (url) => {
+export const getPokemonDetails = async (url: string) => {
     try {
         const response = await api.get(url);
         return response.data;
@@ -38,7 +38,7 @@ export const getPokemonDetails = async (url) => {
     }
 };
 
-export const getPokemonSpecies = async (id) => {
+export const getPokemonSpecies = async (id: string | number) => {
     try {
         const response = await api.get(`/pokemon-species/${id}`);
         return response.data;
@@ -58,7 +58,7 @@ export const getTypes = async () => {
     }
 };
 
-export const getPokemonsByType = async (type) => {
+export const getPokemonsByType = async (type: string) => {
     try {
         const response = await api.get(`/type/${type}`);
         return response.data;
@@ -79,7 +79,7 @@ export const getGenerations = async () => {
     }
 };
 
-export const getGenerationDetails = async (nameOrId) => {
+export const getGenerationDetails = async (nameOrId: string | number) => {
     try {
         // api.get will automatically prepend baseURL 'https://pokeapi.co/api/v2'
         const response = await api.get(`/generation/${nameOrId}`);
@@ -90,7 +90,7 @@ export const getGenerationDetails = async (nameOrId) => {
     }
 };
 
-export const getEvolutionChain = async (url) => {
+export const getEvolutionChain = async (url: string) => {
     try {
         const response = await api.get(url);
         return response.data;
@@ -100,7 +100,7 @@ export const getEvolutionChain = async (url) => {
     }
 };
 
-export const getTypeDetails = async (url) => {
+export const getTypeDetails = async (url: string) => {
     try {
         const response = await api.get(url);
         return response.data;
