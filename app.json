@@ -31,6 +31,10 @@
         "projectId": "dd500341-a5f9-485d-8a7f-8239dfc605f2"
       }
     },
-    "owner": "lmfalconi7"
+    "owner": "lmfalconi7",
+    "plugins": [
+      "expo-router"
+    ],
+    "scheme": "dexter"
   }
 }

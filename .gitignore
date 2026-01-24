@@ -42,3 +42,7 @@ yarn-error.*
 
 # Credenciales de Google (Seguridad)
 google-services-key.json
+
+#agent
+
+.agent/ 

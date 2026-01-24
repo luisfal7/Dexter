@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, ScrollView, Text, TouchableOpacity, Keyboard, Image } from 'react-native';
+import { View, TextInput, StyleSheet, ScrollView, Text, TouchableOpacity, Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import metrics from '../theme/metrics';
-import { colors } from '../theme/colors';
-import { getAllPokemonNames } from '../services/api';
+import { useRouter } from 'expo-router';
+import { colors, metrics } from '../theme';
+import { getAllPokemonNames } from '../services';
 
 const SearchBar = ({ placeholder = "Search Pokemon name or ID", style }) => {
-    const navigation = useNavigation();
+    const router = useRouter();
     const [searchText, setSearchText] = useState('');
     const [allPokemons, setAllPokemons] = useState([]);
     const [filteredResults, setFilteredResults] = useState([]);
@@ -57,13 +56,19 @@ const SearchBar = ({ placeholder = "Search Pokemon name or ID", style }) => {
     };
 
     const handleSelect = (pokemon) => {
-        setSearchText(''); // Clear search on select? or keep it? usually clear or keep name.
+        setSearchText('');
         setShowDropdown(false);
         Keyboard.dismiss();
 
         // Navigate to details
-        // Note: Detail screen needs 'color', we default to primary if not known yet (Detail screen fetches it anyway)
-        navigation.navigate('PokemonDetail', { pokemon: pokemon, color: colors.primary });
+        router.push({
+            pathname: `/pokemon/${pokemon.id}`,
+            params: {
+                name: pokemon.name,
+                url: pokemon.url,
+                color: colors.primary
+            }
+        });
     };
 
     return (

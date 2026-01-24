@@ -1,13 +1,14 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import HomeScreen from '../screens/HomeScreen';
-import TypeListScreen from '../screens/TypeListScreen';
-import PokemonListScreen from '../screens/PokemonListScreen';
-import PokemonDetailScreen from '../screens/PokemonDetailScreen';
-import GenerationsListScreen from '../screens/GenerationsListScreen';
-import NewsListScreen from '../screens/NewsListScreen';
-import PrivacyPolicyScreen from '../screens/PrivacyPolicyScreen';
+import HomeScreen from '../features/home/screens/HomeScreen';
+import TypeListScreen from '../features/pokemon/screens/TypeListScreen';
+import PokemonListScreen from '../features/pokemon/screens/PokemonListScreen';
+import PokemonDetailScreen from '../features/pokemon/screens/PokemonDetailScreen';
+import GenerationsListScreen from '../features/pokemon/screens/GenerationsListScreen';
+import NewsListScreen from '../features/news/screens/NewsListScreen';
+import PrivacyPolicyScreen from '../features/shared/screens/PrivacyPolicyScreen';
+import FavoritesScreen from '../features/pokemon/screens/FavoritesScreen';
 import { colors } from '../theme/colors';
 
 const Stack = createStackNavigator();
@@ -28,6 +29,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="PokemonDetail" component={PokemonDetailScreen} />
                 <Stack.Screen name="GenerationsList" component={GenerationsListScreen} />
                 <Stack.Screen name="NewsList" component={NewsListScreen} />
+                <Stack.Screen name="Favorites" component={FavoritesScreen} />
                 <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
             </Stack.Navigator>
         </NavigationContainer>
