@@ -4,7 +4,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, metrics } from '../../../theme';
 
-const PrivacyPolicyScreen = ({ navigation }) => {
+interface PrivacyPolicyScreenProps {
+    navigation: {
+        goBack: () => void;
+    };
+}
+
+const PrivacyPolicyScreen: React.FC<PrivacyPolicyScreenProps> = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>

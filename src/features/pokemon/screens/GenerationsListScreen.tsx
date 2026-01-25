@@ -19,7 +19,14 @@ const genColors = [
     '#8B9B9B', // Grey
 ];
 
-const GenerationsListScreen = ({ navigation }) => {
+interface GenerationsListScreenProps {
+    navigation: {
+        navigate: (screen: string, params: any) => void;
+        goBack: () => void;
+    };
+}
+
+const GenerationsListScreen: React.FC<GenerationsListScreenProps> = ({ navigation }) => {
     const { data: generations = [], isLoading: loading } = useQuery({
         queryKey: ['generations'],
         queryFn: async () => {
@@ -28,7 +35,7 @@ const GenerationsListScreen = ({ navigation }) => {
         }
     });
 
-    const formatName = (name) => {
+    const formatName = (name: string) => {
         // "generation-i" -> "Generation I"
         const parts = name.split('-');
         if (parts.length === 2) {
@@ -37,7 +44,7 @@ const GenerationsListScreen = ({ navigation }) => {
         return name;
     }
 
-    const renderItem = ({ item, index }) => {
+    const renderItem = ({ item, index }: { item: any, index: number }) => {
         const color = genColors[index % genColors.length];
         return (
             <CategoryCard
@@ -45,6 +52,7 @@ const GenerationsListScreen = ({ navigation }) => {
                 color={color}
                 style={styles.card}
                 onPress={() => navigation.navigate('PokemonList', { generation: item.name, title: formatName(item.name) })}
+                icon={null} // Generations don't have icons in this design
             />
         );
     };

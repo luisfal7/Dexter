@@ -1,58 +1,38 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { PokemonListView } from '../components';
-import { getPokemonsByType, getGenerationDetails } from '../../../services';
 import { colors } from '../../../theme';
+import { usePokemonList } from '../hooks/usePokemonList';
+import { Pokemon } from '../../../types';
 
-const fetchPokemonList = async ({ type, generation }) => {
-    let formatted = [];
+// Basic types for navigation/route. 
+// In a full strict app, these would come from a global navigation type definition file.
+interface RouteParams {
+    type?: string;
+    generation?: number | string;
+    title?: string;
+}
 
-    if (generation) {
-        const data = await getGenerationDetails(generation);
-        if (data && data.pokemon_species) {
-            formatted = data.pokemon_species.map(p => {
-                const urlParts = p.url.split('/');
-                const id = urlParts[urlParts.length - 2];
-                return {
-                    name: p.name,
-                    url: p.url,
-                    id: parseInt(id),
-                };
-            });
-            // Sort by ID for generations
-            formatted.sort((a, b) => a.id - b.id);
-        }
-    } else {
-        const searchType = type || 'grass';
-        const data = await getPokemonsByType(searchType);
+interface PokemonListScreenProps {
+    navigation: {
+        navigate: (screen: string, params: any) => void;
+        goBack: () => void;
+    };
+    route: {
+        params?: RouteParams;
+    };
+}
 
-        if (data && data.pokemon) {
-            formatted = data.pokemon.map(p => {
-                const urlParts = p.pokemon.url.split('/');
-                const id = urlParts[urlParts.length - 2];
-                return {
-                    name: p.pokemon.name,
-                    url: p.pokemon.url,
-                    id: parseInt(id),
-                };
-            });
-        }
-    }
-    return formatted;
-};
-
-const PokemonListScreen = ({ navigation, route }) => {
+const PokemonListScreen: React.FC<PokemonListScreenProps> = ({ navigation, route }) => {
     const { type, generation, title } = route.params || {};
 
-    const { data: pokemons = [], isLoading: loading } = useQuery({
-        queryKey: ['pokemonList', { type, generation }],
-        queryFn: () => fetchPokemonList({ type, generation }),
-    });
+    // Facade Pattern: Component doesn't know about axios or react-query implementation details
+    const { pokemons, isLoading: loading } = usePokemonList({ type, generation });
 
-    const handleSelectPokemon = (item) => {
+    const handleSelectPokemon = (item: Pokemon) => {
+        const typeKey = type as keyof typeof colors.types;
         navigation.navigate('PokemonDetail', {
             pokemon: item,
-            color: type ? (colors.types[type] || colors.primary) : colors.primary
+            color: type && colors.types[typeKey] ? colors.types[typeKey] : colors.primary
         });
     };
 

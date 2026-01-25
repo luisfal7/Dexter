@@ -11,7 +11,18 @@ import PrivacyPolicyScreen from '../features/shared/screens/PrivacyPolicyScreen'
 import FavoritesScreen from '../features/pokemon/screens/FavoritesScreen';
 import { colors } from '../theme/colors';
 
-const Stack = createStackNavigator();
+export type RootStackParamList = {
+    Home: undefined;
+    TypeList: undefined;
+    PokemonList: { type?: string; generation?: string; title?: string };
+    PokemonDetail: { pokemon: any; color: string };
+    GenerationsList: undefined;
+    NewsList: undefined;
+    Favorites: undefined;
+    PrivacyPolicy: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
     return (

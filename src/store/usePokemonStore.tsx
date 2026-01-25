@@ -1,18 +1,13 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-interface Pokemon {
-    id: string;
-    name: string;
-    [key: string]: any; // Allow other properties flexibility for now
-}
+import { Pokemon } from '../types';
 
 interface PokemonStore {
     favorites: Pokemon[];
     addFavorite: (pokemon: Pokemon) => void;
-    removeFavorite: (pokemonId: string) => void;
-    isFavorite: (pokemonId: string) => boolean;
+    removeFavorite: (pokemonId: number) => void;
+    isFavorite: (pokemonId: number) => boolean;
     toggleFavorite: (pokemon: Pokemon) => void;
 }
 

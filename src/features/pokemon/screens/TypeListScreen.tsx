@@ -7,7 +7,7 @@ import CategoryCard from '../../home/components/CategoryCard';
 import { SearchBar } from '../../../components';
 import { getTypes } from '../../../services';
 
-const typeIcons = {
+const typeIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
   normal: 'disc',
   fire: 'flame',
   water: 'water',
@@ -28,8 +28,20 @@ const typeIcons = {
   dark: 'moon',
 };
 
-const TypeListScreen = ({ navigation }) => {
-  const [types, setTypes] = useState([]);
+interface TypeListScreenProps {
+  navigation: {
+    navigate: (screen: string, params: any) => void;
+    goBack: () => void;
+  };
+}
+
+interface TypeItem {
+  name: string;
+  url: string;
+}
+
+const TypeListScreen: React.FC<TypeListScreenProps> = ({ navigation }) => {
+  const [types, setTypes] = useState<TypeItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,9 +56,11 @@ const TypeListScreen = ({ navigation }) => {
     setLoading(false);
   }, []);
 
-  const renderItem = ({ item }) => {
-    const color = colors.types[item.name] || colors.grey;
-    const icon = typeIcons[item.name] || 'ellipse';
+  const renderItem = ({ item }: { item: TypeItem }) => {
+    const colorKey = item.name as keyof typeof colors.types;
+    const color = colors.types[colorKey] ?? colors.grey;
+    const iconKey = item.name as keyof typeof typeIcons;
+    const icon = typeIcons[iconKey] ?? 'ellipse';
 
     return (
       <CategoryCard
@@ -69,10 +83,7 @@ const TypeListScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.searchContainer}>
-        <Text style={styles.searchTitle}>Search Type</Text>
-        {/* Wait, design shows just "Search Type" text? No, it's a placeholder in a search bar? 
-              Screen 2 Image: "Search Type" is placeholder text in the search bar.
-           */}
+        {/* Placeholder text handles the title concept */}
         <SearchBar placeholder="Search Type" style={styles.searchBar} />
       </View>
 

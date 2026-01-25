@@ -7,12 +7,7 @@ import PokemonCard from './PokemonCard';
 import { SearchBar } from '../../../components';
 
 import { ListRenderItemInfo } from 'react-native';
-
-interface Pokemon {
-    name: string;
-    id: string | number;
-    url?: string;
-}
+import { Pokemon } from '../../../types';
 
 interface PokemonListViewProps {
     pokemons: Pokemon[];
@@ -125,6 +120,9 @@ const styles = StyleSheet.create({
     },
     card: {
         flex: 1,
+    },
+    backButton: {
+        padding: 5,
     }
 });
 

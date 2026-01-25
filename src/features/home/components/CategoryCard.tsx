@@ -1,9 +1,17 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, View, ViewStyle, StyleProp } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, metrics } from '../../../theme';
 
-const CategoryCard = ({ title, color, onPress, style, icon }) => {
+interface CategoryCardProps {
+    title: string;
+    color: string;
+    onPress: () => void;
+    icon?: keyof typeof Ionicons.glyphMap | null;
+    style?: StyleProp<ViewStyle>;
+}
+
+const CategoryCard: React.FC<CategoryCardProps> = ({ title, color, onPress, style, icon }) => {
     return (
         <TouchableOpacity
             activeOpacity={0.8}

@@ -4,10 +4,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, metrics } from '../../../theme';
 import PokemonCard from './PokemonCard';
+import { Pokemon } from '../../../types';
+import { ListRenderItemInfo } from 'react-native';
 
-const FavoritesView = ({ favorites, onSelectPokemon, onBack }) => {
+interface FavoritesViewProps {
+    favorites: Pokemon[];
+    onSelectPokemon: (pokemon: Pokemon) => void;
+    onBack: () => void;
+}
 
-    const renderItem = ({ item }) => (
+const FavoritesView: React.FC<FavoritesViewProps> = ({ favorites, onSelectPokemon, onBack }) => {
+
+    const renderItem = ({ item }: ListRenderItemInfo<Pokemon>) => (
         <PokemonCard
             name={item.name}
             id={item.id}
@@ -82,6 +90,9 @@ const styles = StyleSheet.create({
     },
     card: {
         flex: 1,
+    },
+    backButton: {
+        padding: 5,
     }
 });
 

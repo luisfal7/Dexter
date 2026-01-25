@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, ScrollView, Text, TouchableOpacity, Keyboard } from 'react-native';
+import { View, TextInput, StyleSheet, ScrollView, Text, TouchableOpacity, Keyboard, Image, StyleProp, ViewStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { colors, metrics } from '../theme';
 import { getAllPokemonNames } from '../services';
 
-const SearchBar = ({ placeholder = "Search Pokemon name or ID", style }) => {
+interface SearchBarProps {
+    placeholder?: string;
+    style?: StyleProp<ViewStyle>;
+}
+
+interface SearchResult {
+    name: string;
+    url: string;
+    id: number;
+    imageUrl: string;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search Pokemon name or ID", style }) => {
     const router = useRouter();
     const [searchText, setSearchText] = useState('');
-    const [allPokemons, setAllPokemons] = useState([]);
-    const [filteredResults, setFilteredResults] = useState([]);
+    const [allPokemons, setAllPokemons] = useState<any[]>([]); // API returns raw objects initially
+    const [filteredResults, setFilteredResults] = useState<SearchResult[]>([]);
     const [showDropdown, setShowDropdown] = useState(false);
 
     useEffect(() => {
@@ -24,7 +36,7 @@ const SearchBar = ({ placeholder = "Search Pokemon name or ID", style }) => {
         loadAllPokemons();
     }, []);
 
-    const handleSearch = (text) => {
+    const handleSearch = (text: string) => {
         setSearchText(text);
         if (!text) {
             setFilteredResults([]);
@@ -35,11 +47,11 @@ const SearchBar = ({ placeholder = "Search Pokemon name or ID", style }) => {
         const lowerText = text.toLowerCase();
 
         // Filter logic: Name or ID
-        const filtered = allPokemons.filter(p => {
+        const filtered = allPokemons.filter((p: any) => {
             const urlParts = p.url.split('/');
             const id = urlParts[urlParts.length - 2];
             return p.name.toLowerCase().includes(lowerText) || id.includes(lowerText);
-        }).map(p => {
+        }).map((p: any) => {
             // Map to useful object
             const urlParts = p.url.split('/');
             const id = urlParts[urlParts.length - 2];
@@ -55,7 +67,7 @@ const SearchBar = ({ placeholder = "Search Pokemon name or ID", style }) => {
         setShowDropdown(true);
     };
 
-    const handleSelect = (pokemon) => {
+    const handleSelect = (pokemon: SearchResult) => {
         setSearchText('');
         setShowDropdown(false);
         Keyboard.dismiss();
