@@ -5,6 +5,7 @@ export { Pokemon }; // Re-export for convenience if needed, or consumers import 
 export const PokemonAdapter = {
     /**
      * Adapts a single item from the 'getGenerationDetails' response (pokemon_species array).
+     * Español: Adapta un solo elemento de la respuesta 'getGenerationDetails'.
      * @param item Raw item from API
      */
     fromGeneration: (item: any): Pokemon => {
@@ -20,6 +21,7 @@ export const PokemonAdapter = {
     /**
      * Adapts a single item from the 'getPokemonsByType' response (pokemon array objects).
      * Structure is { pokemon: { name, url } }
+     * Español: Adapta un ítem de la respuesta 'getPokemonsByType'. Estructura es { pokemon: { name, url } }
      * @param item Raw item from API
      */
     fromType: (item: any): Pokemon => {
@@ -35,6 +37,7 @@ export const PokemonAdapter = {
 
     /**
      * Helper to sort Pokemons by ID
+     * Español: Ayudante para ordenar Pokemones por ID
      */
     sortById: (pokemons: Pokemon[]): Pokemon[] => {
         return [...pokemons].sort((a, b) => a.id - b.id);

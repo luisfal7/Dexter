@@ -10,7 +10,8 @@ interface UsePokemonListParams {
 
 export const usePokemonList = ({ type, generation }: UsePokemonListParams) => {
 
-    // Internal function to coordinate fetching and adapting
+    // English: Internal function to coordinate fetching and adapting
+    // Español: Función interna para coordinar la obtención y adaptación
     const fetchAndAdapt = async () => {
         let pokemons: Pokemon[] = [];
 
@@ -18,11 +19,12 @@ export const usePokemonList = ({ type, generation }: UsePokemonListParams) => {
             const data = await getGenerationDetails(generation);
             if (data?.pokemon_species) {
                 pokemons = data.pokemon_species.map(PokemonAdapter.fromGeneration);
-                // Generations usually need sorting by ID
+                // English: Generations usually need sorting by ID
+                // Español: Las generaciones usualmente necesitan ordenarse por ID
                 pokemons = PokemonAdapter.sortById(pokemons);
             }
         } else {
-            const searchType = type || 'grass'; // Default if neither provided
+            const searchType = type || 'grass'; // English: Default if neither provided | Español: Por defecto si ninguno se provee
             const data = await getPokemonsByType(searchType);
             if (data?.pokemon) {
                 pokemons = data.pokemon.map(PokemonAdapter.fromType);

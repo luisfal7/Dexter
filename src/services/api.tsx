@@ -81,7 +81,8 @@ export const getGenerations = async () => {
 
 export const getGenerationDetails = async (nameOrId: string | number) => {
     try {
-        // api.get will automatically prepend baseURL 'https://pokeapi.co/api/v2'
+        // English: api.get will automatically prepend baseURL 'https://pokeapi.co/api/v2'
+        // Español: api.get antepondrá automáticamente la baseURL 'https://pokeapi.co/api/v2'
         const response = await api.get(`/generation/${nameOrId}`);
         return response.data;
     } catch (error) {

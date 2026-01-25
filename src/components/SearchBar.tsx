@@ -20,7 +20,7 @@ interface SearchResult {
 const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search Pokemon name or ID", style }) => {
     const router = useRouter();
     const [searchText, setSearchText] = useState('');
-    const [allPokemons, setAllPokemons] = useState<any[]>([]); // API returns raw objects initially
+    const [allPokemons, setAllPokemons] = useState<any[]>([]); // English: API returns raw objects initially | Español: La API retorna objetos crudos inicialmente
     const [filteredResults, setFilteredResults] = useState<SearchResult[]>([]);
     const [showDropdown, setShowDropdown] = useState(false);
 
@@ -46,20 +46,22 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search Pokemon nam
 
         const lowerText = text.toLowerCase();
 
-        // Filter logic: Name or ID
+        // English: Filter logic: Name or ID
+        // Español: Lógica de filtrado: Nombre o ID
         const filtered = allPokemons.filter((p: any) => {
             const urlParts = p.url.split('/');
             const id = urlParts[urlParts.length - 2];
             return p.name.toLowerCase().includes(lowerText) || id.includes(lowerText);
         }).map((p: any) => {
-            // Map to useful object
+            // English: Map to useful object
+            // Español: Mapear a objeto útil
             const urlParts = p.url.split('/');
             const id = urlParts[urlParts.length - 2];
             return {
                 name: p.name,
                 url: p.url,
                 id: parseInt(id),
-                imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png` // Small sprite for list
+                imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png` // English: Small sprite for list | Español: Sprite pequeño para lista
             };
         });
 
@@ -72,7 +74,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search Pokemon nam
         setShowDropdown(false);
         Keyboard.dismiss();
 
-        // Navigate to details
+        // English: Navigate to details
+        // Español: Navegar a detalles
         router.push({
             pathname: `/pokemon/${pokemon.id}`,
             params: {
@@ -102,7 +105,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search Pokemon nam
                 )}
             </View>
 
-            {/* Dropdown Overlay */}
+            {/* English: Dropdown Overlay | Español: Superposición desplegable */}
             {showDropdown && filteredResults.length > 0 && (
                 <View style={styles.dropdown}>
                     <ScrollView
@@ -110,7 +113,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search Pokemon nam
                         keyboardShouldPersistTaps="handled"
                         nestedScrollEnabled={true}
                     >
-                        {/* Render ALL results. MaxHeight effectively limits view to ~6 items, user scrolls for more */}
+                        {/* English: Render ALL results. MaxHeight effectively limits view to ~6 items, user scrolls for more */}
+                        {/* Español: Renderizar TODOS los resultados. MaxHeight limita efectivamente la vista a ~6 elementos, el usuario se desplaza para ver más */}
                         {filteredResults.map((item) => (
                             <TouchableOpacity key={item.name} style={styles.item} onPress={() => handleSelect(item)}>
                                 <Image source={{ uri: item.imageUrl }} style={styles.itemImage} />
@@ -128,7 +132,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search Pokemon nam
 
 const styles = StyleSheet.create({
     wrapper: {
-        zIndex: 100, // Ensure it sits on top of other content
+        zIndex: 100, // English: Ensure it sits on top of other content | Español: Asegurar que se sitúe sobre otro contenido
     },
     container: {
         height: 50,
