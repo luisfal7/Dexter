@@ -8,7 +8,16 @@ import PokemonMoves from './PokemonMoves';
 import PokemonEvolution from './PokemonEvolution';
 import PokemonTypeMatchups from './PokemonTypeMatchups';
 
-const PokemonDetailView = ({
+interface PokemonDetailViewProps {
+    pokemon: { id: number; name: string; url: string; };
+    details: any; // Ideally typed, but 'any' is better than implicit any for now if complex
+    species: any;
+    onBackPressed: () => void;
+    isFavorite: boolean;
+    onToggleFavorite: () => void;
+}
+
+const PokemonDetailView: React.FC<PokemonDetailViewProps> = ({
     pokemon,
     details,
     species,
@@ -29,7 +38,7 @@ const PokemonDetailView = ({
     useEffect(() => {
         if (details && details.types && details.types.length > 0) {
             const type = details.types[0].type.name;
-            const typeColor = colors.types[type];
+            const typeColor = colors.types[type as keyof typeof colors.types];
             if (typeColor) {
                 setBackgroundColor(typeColor);
             }
@@ -39,10 +48,11 @@ const PokemonDetailView = ({
     const renderTabContent = () => {
         if (!details || !species) return null;
 
-        const flavor = species.flavor_text_entries.find(entry => entry.language.name === 'en');
+        const flavor = species.flavor_text_entries.find((entry: any) => entry.language.name === 'en');
         const description = flavor ? flavor.flavor_text.replace(/\n|\f/g, ' ') : '';
 
         switch (activeTab) {
+            // ... (rest of switch is fine I think)
             case 'About':
                 return (
                     <ScrollView showsVerticalScrollIndicator={false}>
@@ -134,6 +144,9 @@ const styles = StyleSheet.create({
     tab: {
         paddingBottom: 10,
         alignItems: 'center',
+    },
+    activeTab: {
+        borderBottomWidth: 0,
     },
     tabText: {
         color: colors.grey,

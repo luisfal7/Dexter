@@ -4,7 +4,17 @@ import { usePokemonStore } from '../../../../store/usePokemonStore';
 import { getPokemonDetails, getPokemonSpecies } from '../../../../services';
 import PokemonDetailView from './PokemonDetailView';
 
-const PokemonDetailContent = ({ pokemon, color, onBackPressed }) => {
+interface PokemonDetailContentProps {
+    pokemon: {
+        id: number;
+        url: string;
+        name: string;
+    };
+    color?: string;
+    onBackPressed: () => void;
+}
+
+const PokemonDetailContent: React.FC<PokemonDetailContentProps> = ({ pokemon, color, onBackPressed }) => {
 
     const { isFavorite, toggleFavorite } = usePokemonStore();
     const isFav = isFavorite(pokemon.id);

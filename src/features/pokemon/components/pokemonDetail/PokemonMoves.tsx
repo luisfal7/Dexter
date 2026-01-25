@@ -2,7 +2,16 @@ import React from 'react';
 import { Text, StyleSheet, ScrollView } from 'react-native';
 import { colors } from '../../../../theme';
 
-const PokemonMoves = ({ moves }) => {
+interface PokemonMovesProps {
+    moves: {
+        move: {
+            name: string;
+            url: string;
+        };
+    }[];
+}
+
+const PokemonMoves: React.FC<PokemonMovesProps> = ({ moves }) => {
     return (
         <ScrollView>
             {moves?.slice(0, 10).map(move => (

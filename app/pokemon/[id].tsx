@@ -9,10 +9,15 @@ const PokemonDetailRoute = () => {
 
     // params contains id, name, url, color
     // We need to reconstruct the pokemon object for the content component
+    const id = Array.isArray(params.id) ? params.id[0] : params.id;
+    const name = Array.isArray(params.name) ? params.name[0] : params.name;
+    const url = Array.isArray(params.url) ? params.url[0] : params.url;
+    const color = Array.isArray(params.color) ? params.color[0] : params.color;
+
     const pokemon = {
-        id: params.id,
-        name: params.name,
-        url: params.url // might be undefined if deep linked only by ID, but Content handles fetching
+        id: parseInt(id || '0'),
+        name: name || '',
+        url: url || ''
     };
 
     return (
@@ -20,7 +25,7 @@ const PokemonDetailRoute = () => {
             <Stack.Screen options={{ headerShown: false }} />
             <PokemonDetailContent
                 pokemon={pokemon}
-                color={params.color}
+                color={color}
                 onBackPressed={() => router.back()}
             />
         </View>

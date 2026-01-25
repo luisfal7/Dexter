@@ -77,9 +77,8 @@ const PokemonEvolution: React.FC<PokemonEvolutionProps> = ({ evolutionUrl, isShi
         if (pokemon.id === String(currentPokemonId)) return;
 
         router.push({
-            pathname: '/pokemon/[id]',
+            pathname: `/pokemon/${pokemon.id}`,
             params: {
-                id: pokemon.id,
                 name: pokemon.name,
                 url: pokemon.url,
                 color: colors.primary
@@ -88,7 +87,7 @@ const PokemonEvolution: React.FC<PokemonEvolutionProps> = ({ evolutionUrl, isShi
     };
 
     const formatTriggerString = (detail: any) => {
-        const triggers = [];
+        const triggers: string[] = [];
 
         // Level Up
         if (detail.min_level) triggers.push(`Lvl ${detail.min_level}`);

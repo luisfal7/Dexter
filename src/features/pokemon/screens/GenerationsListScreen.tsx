@@ -1,82 +1,69 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useQuery } from '@tanstack/react-query';
 import { colors, metrics } from '../../../theme';
-import CategoryCard from '../../home/components/CategoryCard';
-import { getGenerations } from '../../../services';
 
-// Pastel colors for generations to look nice
-const genColors = [
-    '#FF9D5C', // Orange
-    '#4AD0B2', // Teal
-    '#58ABF6', // Blue
-    '#FAE078', // Yellow
-    '#B1736C', // Reddish
-    '#9A6CB9', // Purple
-    '#EA686D', // Red
-    '#8B9B9B', // Grey
+const generations = [
+    { id: 1, name: 'Generation I', region: 'Kanto', starters: [1, 4, 7] },
+    { id: 2, name: 'Generation II', region: 'Johto', starters: [152, 155, 158] },
+    { id: 3, name: 'Generation III', region: 'Hoenn', starters: [252, 255, 258] },
+    { id: 4, name: 'Generation IV', region: 'Sinnoh', starters: [387, 390, 393] },
+    { id: 5, name: 'Generation V', region: 'Unova', starters: [495, 498, 501] },
+    { id: 6, name: 'Generation VI', region: 'Kalos', starters: [650, 653, 656] },
+    { id: 7, name: 'Generation VII', region: 'Alola', starters: [722, 725, 728] },
+    { id: 8, name: 'Generation VIII', region: 'Galar', starters: [810, 813, 816] },
 ];
 
-interface GenerationsListScreenProps {
-    navigation: {
-        navigate: (screen: string, params: any) => void;
-        goBack: () => void;
-    };
-}
+const GenerationsListScreen = () => {
+    const router = useRouter();
 
-const GenerationsListScreen: React.FC<GenerationsListScreenProps> = ({ navigation }) => {
-    const { data: generations = [], isLoading: loading } = useQuery({
-        queryKey: ['generations'],
-        queryFn: async () => {
-            const data = await getGenerations();
-            return data.results;
-        }
-    });
-
-    const formatName = (name: string) => {
-        // "generation-i" -> "Generation I"
-        const parts = name.split('-');
-        if (parts.length === 2) {
-            return `Generation ${parts[1].toUpperCase()}`;
-        }
-        return name;
-    }
-
-    const renderItem = ({ item, index }: { item: any, index: number }) => {
-        const color = genColors[index % genColors.length];
-        return (
-            <CategoryCard
-                title={formatName(item.name)}
-                color={color}
-                style={styles.card}
-                onPress={() => navigation.navigate('PokemonList', { generation: item.name, title: formatName(item.name) })}
-                icon={null} // Generations don't have icons in this design
-            />
-        );
-    };
+    const renderItem = ({ item }: { item: typeof generations[0] }) => (
+        <TouchableOpacity
+            style={styles.card}
+            activeOpacity={0.9}
+            onPress={() => router.push({
+                pathname: '/pokemon/list',
+                params: { generation: item.id, title: item.name }
+            })}
+        >
+            <View style={styles.cardContent}>
+                <Text style={styles.genName}>{item.name}</Text>
+                <Text style={styles.regionName}>{item.region}</Text>
+            </View>
+            <View style={styles.startersContainer}>
+                {item.starters.map((id, index) => (
+                    <Image
+                        key={id}
+                        source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png` }}
+                        style={[
+                            styles.starterImage,
+                            { zIndex: 3 - index, transform: [{ translateX: index * -15 }] }
+                        ]}
+                        contentFit="contain"
+                    />
+                ))}
+            </View>
+        </TouchableOpacity>
+    );
 
     return (
         <SafeAreaView style={styles.container}>
+            <Stack.Screen options={{ headerShown: false }} />
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name="arrow-back" size={28} color={colors.text} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Generations</Text>
             </View>
-
-            <View style={styles.content}>
-                <FlatList
-                    data={generations}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.name}
-                    numColumns={2}
-                    contentContainerStyle={styles.listContent}
-                    columnWrapperStyle={styles.columnWrapper}
-                    showsVerticalScrollIndicator={false}
-                />
-            </View>
+            <FlatList
+                data={generations}
+                renderItem={renderItem}
+                keyExtractor={item => item.id.toString()}
+                contentContainerStyle={styles.list}
+            />
         </SafeAreaView>
     );
 };
@@ -84,7 +71,7 @@ const GenerationsListScreen: React.FC<GenerationsListScreenProps> = ({ navigatio
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.background,
+        backgroundColor: '#F5F5F5',
     },
     header: {
         paddingHorizontal: metrics.marginHorizontal,
@@ -93,30 +80,55 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     backButton: {
-        marginRight: 20,
+        marginRight: 10,
     },
     headerTitle: {
         fontSize: 28,
         fontWeight: 'bold',
         color: colors.text,
+        marginLeft: 10,
     },
-    content: {
-        flex: 1,
-        paddingTop: 20,
-    },
-    listContent: {
-        paddingHorizontal: metrics.marginHorizontal,
-        paddingBottom: 20,
-    },
-    columnWrapper: {
-        justifyContent: 'space-between',
+    list: {
+        padding: metrics.marginHorizontal,
     },
     card: {
-        flex: 0.48,
+        backgroundColor: 'white',
+        borderRadius: 15,
         marginBottom: 15,
-        height: 100, // Taller cards for Generations look good
-        justifyContent: 'center',
+        height: 110,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
+        paddingHorizontal: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 3,
+        overflow: 'hidden'
+    },
+    cardContent: {
+        justifyContent: 'center',
+        flex: 1,
+    },
+    genName: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: colors.text,
+    },
+    regionName: {
+        fontSize: 14,
+        color: colors.grey,
+        marginTop: 5,
+    },
+    startersContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingRight: 10,
+    },
+    starterImage: {
+        width: 80,
+        height: 80,
     }
 });
 

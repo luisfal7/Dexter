@@ -6,33 +6,33 @@ import { Pokemon } from '../../../types';
 
 // Basic types for navigation/route. 
 // In a full strict app, these would come from a global navigation type definition file.
-interface RouteParams {
-    type?: string;
-    generation?: number | string;
-    title?: string;
-}
+import { useRouter, useLocalSearchParams } from 'expo-router';
 
-interface PokemonListScreenProps {
-    navigation: {
-        navigate: (screen: string, params: any) => void;
-        goBack: () => void;
-    };
-    route: {
-        params?: RouteParams;
-    };
-}
+// ... imports
 
-const PokemonListScreen: React.FC<PokemonListScreenProps> = ({ navigation, route }) => {
-    const { type, generation, title } = route.params || {};
+const PokemonListScreen: React.FC = () => {
+    const router = useRouter();
+    const params = useLocalSearchParams();
+
+    // Normalize params
+    const type = Array.isArray(params.type) ? params.type[0] : params.type;
+    const generation = Array.isArray(params.generation) ? params.generation[0] : params.generation;
+    const title = Array.isArray(params.title) ? params.title[0] : params.title;
 
     // Facade Pattern: Component doesn't know about axios or react-query implementation details
     const { pokemons, isLoading: loading } = usePokemonList({ type, generation });
 
     const handleSelectPokemon = (item: Pokemon) => {
         const typeKey = type as keyof typeof colors.types;
-        navigation.navigate('PokemonDetail', {
-            pokemon: item,
-            color: type && colors.types[typeKey] ? colors.types[typeKey] : colors.primary
+        const color = (type && typeKey && colors.types[typeKey]) ? colors.types[typeKey] : colors.primary;
+
+        router.push({
+            pathname: `/pokemon/${item.id}`,
+            params: {
+                name: item.name,
+                url: item.url,
+                color: color
+            }
         });
     };
 
@@ -41,7 +41,7 @@ const PokemonListScreen: React.FC<PokemonListScreenProps> = ({ navigation, route
             pokemons={pokemons}
             loading={loading}
             onSelectPokemon={handleSelectPokemon}
-            onBack={() => navigation.goBack()}
+            onBack={() => router.back()}
             title={title}
             type={type}
             generation={generation}

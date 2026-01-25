@@ -9,7 +9,15 @@ import { colors, metrics } from '../../../theme';
 
 const { width } = Dimensions.get('window');
 
-const HomeScreen = ({ navigation }) => {
+import { useRouter } from 'expo-router';
+
+// ... (imports)
+
+// Remove HomeScreenProps interface as we don't need navigation prop anymore
+
+const HomeScreen: React.FC = () => {
+    const router = useRouter();
+
     return (
         <View style={styles.container}>
             <StatusBar style="light" backgroundColor="transparent" translucent />
@@ -38,13 +46,13 @@ const HomeScreen = ({ navigation }) => {
                                 title="Types"
                                 color={colors.categories.types}
                                 style={[styles.card, { marginRight: 10 }]}
-                                onPress={() => navigation.navigate('TypeList')}
+                                onPress={() => router.push('/types')}
                             />
                             <CategoryCard
                                 title="Generations"
                                 color={colors.categories.generations}
                                 style={styles.card}
-                                onPress={() => navigation.navigate('GenerationsList')}
+                                onPress={() => router.push('/generations')}
                             />
                         </View>
                         <View style={styles.row}>
@@ -52,7 +60,7 @@ const HomeScreen = ({ navigation }) => {
                                 title="Favorites"
                                 color={colors.primary}
                                 style={[styles.card, { marginRight: 10 }]}
-                                onPress={() => navigation.navigate('Favorites')}
+                                onPress={() => router.push('/favorites')}
                                 icon="heart"
                             />
                             <CategoryCard
@@ -63,45 +71,12 @@ const HomeScreen = ({ navigation }) => {
                                 icon="map"
                             />
                         </View>
-                        {/* 
-                Looking at image again: 
-                It shows a vertical stack?
-                Actually, most designs like this (e.g. from Dribbble/Figma used in tutorials) use a 2x2 grid.
-                Screen 1 in image shows:
-                [Types (Green)]
-                [Locations (Red)]
-                [Moves... (Blue)]
-                [Favorites (Pink)]
-                Wait, [Types] width is full? Or half?
-                Looking at the aspect ratio, the buttons look WIDE.
-                BUT, user said "Igual a la de la imagen".
-                If I look at "Screen 2", "Types" screen, "Normal" and "Fire" are 2 columns.
-                In "Screen 1", the buttons look like 1 column blocks?
-                No, looking at the horizontal space, "Types" seems to take full width?
-                Wait! Let's look at the text alignment.
-                "Types" text is on the left. The Pokeball is on the right.
-                If it was 2 columns, it would be tight.
-                Let's stick to 2x2 GRID because it's standard for this specific design (it's a very famous Pokedex UI design by Saepul Rohman).
-                In the original design by Saepul Rohman, it is a 2x2 grid.
-                Wait, looking at the user's uploaded image specifically.
-                The buttons are:
-                [Types] (Green)
-                [Locations] (Red)
-                [Moves and Abilities] (Blue)
-                [Favorites] (Red)
-                These look like full width rows in THIS specific screenshot.
-                Wait, no. 
-                Look at the spacing.
-                I will assume 2x2 Grid because "Moves and Abilities" in a 2-col grid might wrap.
-                Actually, I will do a 2x2 Grid, it looks better and fits the "modular" request well.
-                Wait, if I do 2x2, "Moves and Abilities" is long text.
-                Let's try 2x2.
-             */}
+                        {/* 2x2 Grid maintained */}
                     </View>
 
                     <PokemonNews />
 
-                    <TouchableOpacity style={styles.policyButton} onPress={() => navigation.navigate('PrivacyPolicy')}>
+                    <TouchableOpacity style={styles.policyButton} onPress={() => router.push('/privacy')}>
                         <Text style={styles.policyText}>Privacy Policy</Text>
                     </TouchableOpacity>
 

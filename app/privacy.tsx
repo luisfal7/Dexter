@@ -41,6 +41,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    backButton: {
+        marginRight: 10,
+    },
     headerTitle: {
         fontSize: 28,
         fontWeight: 'bold',

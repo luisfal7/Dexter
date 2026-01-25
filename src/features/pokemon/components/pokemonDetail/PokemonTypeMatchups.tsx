@@ -4,13 +4,17 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../../../../theme';
 import { getTypeDetails } from '../../../../services';
 
-const PokemonTypeMatchups = ({ types }) => {
-    const [superWeak, setSuperWeak] = useState([]);
-    const [weak, setWeak] = useState([]);
-    const [normal, setNormal] = useState([]);
-    const [resistant, setResistant] = useState([]);
-    const [superResistant, setSuperResistant] = useState([]);
-    const [immune, setImmune] = useState([]);
+interface PokemonTypeMatchupsProps {
+    types: { type: { name: string; url: string } }[];
+}
+
+const PokemonTypeMatchups: React.FC<PokemonTypeMatchupsProps> = ({ types }) => {
+    const [superWeak, setSuperWeak] = useState<string[]>([]);
+    const [weak, setWeak] = useState<string[]>([]);
+    const [normal, setNormal] = useState<string[]>([]);
+    const [resistant, setResistant] = useState<string[]>([]);
+    const [superResistant, setSuperResistant] = useState<string[]>([]);
+    const [immune, setImmune] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,7 +24,7 @@ const PokemonTypeMatchups = ({ types }) => {
             try {
                 // Map to track damage multiplier for each attacking type
                 // Key: Attacking Type, Value: Multiplier (starts at 1)
-                const damageMap = {};
+                const damageMap: Record<string, number> = {};
 
                 // Initialize all types with 1x damage (Normal)
                 // We need a list of all types to ensure 'Normal' category is populated correctly
@@ -46,25 +50,25 @@ const PokemonTypeMatchups = ({ types }) => {
                     const typeData = await getTypeDetails(t.type.url);
 
                     // Defensive Matchups
-                    typeData.damage_relations.double_damage_from.forEach(source => {
+                    typeData.damage_relations.double_damage_from.forEach((source: any) => {
                         damageMap[source.name] *= 2;
                     });
 
-                    typeData.damage_relations.half_damage_from.forEach(source => {
+                    typeData.damage_relations.half_damage_from.forEach((source: any) => {
                         damageMap[source.name] *= 0.5;
                     });
 
-                    typeData.damage_relations.no_damage_from.forEach(source => {
+                    typeData.damage_relations.no_damage_from.forEach((source: any) => {
                         damageMap[source.name] *= 0;
                     });
                 }));
 
-                const sWeak = [];
-                const wk = [];
-                const nrm = [];
-                const res = [];
-                const sRes = [];
-                const imm = [];
+                const sWeak: string[] = [];
+                const wk: string[] = [];
+                const nrm: string[] = [];
+                const res: string[] = [];
+                const sRes: string[] = [];
+                const imm: string[] = [];
 
                 for (const [type, multiplier] of Object.entries(damageMap)) {
                     if (multiplier === 4) sWeak.push(type);
@@ -99,7 +103,7 @@ const PokemonTypeMatchups = ({ types }) => {
     if (!types) return null;
 
     // Mapping based on the visual style of Pokemon types
-    const getIconName = (type) => {
+    const getIconName = (type: string): any => {
         switch (type) {
             case 'fire': return 'fire';
             case 'water': return 'water';
@@ -123,17 +127,20 @@ const PokemonTypeMatchups = ({ types }) => {
         }
     };
 
-    const renderTypeRow = (title, typeList) => {
+    const renderTypeRow = (title: string, typeList: string[]) => {
         if (!typeList || typeList.length === 0) return null;
         return (
             <View style={styles.sectionContainer}>
                 <Text style={styles.sectionTitle}>{title}</Text>
                 <View style={styles.typeRow}>
-                    {typeList.map((type, index) => (
-                        <View key={index} style={[styles.typePill, { backgroundColor: colors.types[type] || colors.grey }]}>
-                            <MaterialCommunityIcons name={getIconName(type)} size={16} color="white" />
-                        </View>
-                    ))}
+                    {typeList.map((type, index) => {
+                        const colorKey = type as keyof typeof colors.types;
+                        return (
+                            <View key={index} style={[styles.typePill, { backgroundColor: colors.types[colorKey] || colors.grey }]}>
+                                <MaterialCommunityIcons name={getIconName(type)} size={16} color="white" />
+                            </View>
+                        );
+                    })}
                 </View>
             </View>
         );

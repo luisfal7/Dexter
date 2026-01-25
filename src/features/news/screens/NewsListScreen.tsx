@@ -5,8 +5,13 @@ import NewsListView from '../components/NewsListView';
 
 const GOOGLE_NEWS_RSS_URL = 'https://news.google.com/rss/search?q=Pokemon&hl=en-US&gl=US&ceid=US:en';
 
-const NewsListScreen = ({ navigation }) => {
-    const [news, setNews] = useState([]);
+import { useRouter } from 'expo-router';
+
+// ... imports
+
+const NewsListScreen: React.FC = () => {
+    const router = useRouter();
+    const [news, setNews] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -26,7 +31,7 @@ const NewsListScreen = ({ navigation }) => {
         fetchNews();
     }, []);
 
-    const handlePress = (url) => {
+    const handlePress = (url: string) => {
         Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
     };
 
@@ -35,7 +40,7 @@ const NewsListScreen = ({ navigation }) => {
             news={news}
             loading={loading}
             onNewsPress={handlePress}
-            onBack={() => navigation.goBack()}
+            onBack={() => router.back()}
         />
     );
 };

@@ -7,7 +7,23 @@ import { colors, metrics } from '../../../../theme';
 
 const { width } = Dimensions.get('window');
 
-const PokemonHeader = ({ pokemon, details, backgroundColor, isShiny, setIsShiny, onBackPressed, isFavorite, onToggleFavorite }) => {
+interface PokemonHeaderProps {
+    pokemon: {
+        id: number;
+        name: string;
+    };
+    details?: {
+        types: { type: { name: string } }[];
+    };
+    backgroundColor?: string;
+    isShiny: boolean;
+    setIsShiny: (value: boolean) => void;
+    onBackPressed: () => void;
+    isFavorite: boolean;
+    onToggleFavorite: () => void;
+}
+
+const PokemonHeader: React.FC<PokemonHeaderProps> = ({ pokemon, details, backgroundColor, isShiny, setIsShiny, onBackPressed, isFavorite, onToggleFavorite }) => {
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${isShiny ? 'shiny/' : ''}${pokemon.id}.png`;
     const formattedId = `#${pokemon.id.toString().padStart(3, '0')}`;
 

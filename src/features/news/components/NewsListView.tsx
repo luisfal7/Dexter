@@ -5,9 +5,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, metrics } from '../../../theme';
 
-const NewsListView = ({ news, loading, onNewsPress, onBack }) => {
+interface NewsItem {
+    title: string;
+    published: string;
+    links: { url: string }[];
+}
 
-    const renderItem = ({ item }) => (
+interface NewsListViewProps {
+    news: NewsItem[];
+    loading: boolean;
+    onNewsPress: (url: string) => void;
+    onBack?: () => void;
+}
+
+const NewsListView: React.FC<NewsListViewProps> = ({ news, loading, onNewsPress, onBack }) => {
+
+    const renderItem = ({ item }: { item: NewsItem }) => (
         <TouchableOpacity style={styles.newsItem} onPress={() => onNewsPress(item.links[0].url)}>
             <View style={styles.newsContent}>
                 <Text style={styles.newsHeadline} numberOfLines={3}>{item.title}</Text>
@@ -113,11 +126,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     newsImage: {
-        width: 30,
+        width: 30, // Pokeball icon size
         height: 30,
-        width: 30,
-        height: 30,
-        opacity: 0.5,
         opacity: 0.5,
     }
 });

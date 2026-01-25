@@ -8,7 +8,7 @@ import { colors, metrics } from '../../../theme';
 
 const PokemonNews = () => {
     const router = useRouter(); // Use router
-    const [news, setNews] = useState([]);
+    const [news, setNews] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
     const GOOGLE_NEWS_RSS_URL = 'https://news.google.com/rss/search?q=Pokemon&hl=en-US&gl=US&ceid=US:en';
@@ -32,7 +32,8 @@ const PokemonNews = () => {
                     throw new Error("No items found");
                 }
             } catch (error) {
-                console.warn("News fetch failed, using fallback:", error.message);
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                console.warn("News fetch failed, using fallback:", errorMessage);
                 setNews([
                     {
                         title: "Pokemon Legends: Z-A Announced for 2025",
@@ -58,7 +59,7 @@ const PokemonNews = () => {
         fetchNews();
     }, []);
 
-    const handlePress = (url) => {
+    const handlePress = (url: string) => {
         Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
     };
 

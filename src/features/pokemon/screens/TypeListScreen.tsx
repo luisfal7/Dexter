@@ -28,19 +28,17 @@ const typeIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
   dark: 'moon',
 };
 
-interface TypeListScreenProps {
-  navigation: {
-    navigate: (screen: string, params: any) => void;
-    goBack: () => void;
-  };
-}
+import { useRouter } from 'expo-router';
+
+// ... imports
 
 interface TypeItem {
   name: string;
   url: string;
 }
 
-const TypeListScreen: React.FC<TypeListScreenProps> = ({ navigation }) => {
+const TypeListScreen: React.FC = () => {
+  const router = useRouter();
   const [types, setTypes] = useState<TypeItem[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -68,7 +66,10 @@ const TypeListScreen: React.FC<TypeListScreenProps> = ({ navigation }) => {
         color={color}
         icon={icon}
         style={styles.card}
-        onPress={() => navigation.navigate('PokemonList', { type: item.name })}
+        onPress={() => router.push({
+          pathname: '/pokemon/list',
+          params: { type: item.name }
+        })}
       />
     );
   };
@@ -76,7 +77,7 @@ const TypeListScreen: React.FC<TypeListScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={28} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Types</Text>

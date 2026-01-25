@@ -8,7 +8,7 @@ const FavoritesRoute = () => {
     const router = useRouter();
     const { favorites } = usePokemonStore();
 
-    const handleSelectPokemon = (item) => {
+    const handleSelectPokemon = (item: { id: number; name: string; url: string }) => {
         router.push({
             pathname: `/pokemon/${item.id}`,
             params: {

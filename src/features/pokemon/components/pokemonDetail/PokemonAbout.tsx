@@ -1,7 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { colors } from '../../../../theme';
-const PokemonAbout = ({ description, height, weight }) => {
+interface PokemonAboutProps {
+    description: string;
+    height: number;
+    weight: number;
+}
+
+const PokemonAbout: React.FC<PokemonAboutProps> = ({ description, height, weight }) => {
     return (
         <View>
             <Text style={styles.description}>{description}</Text>

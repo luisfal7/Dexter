@@ -2,10 +2,21 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../../../../theme';
 
-const PokemonStats = ({ stats, color }) => {
+interface PokemonStatsProps {
+    stats: {
+        base_stat: number;
+        stat: {
+            name: string;
+            url: string;
+        };
+    }[];
+    color: string;
+}
+
+const PokemonStats: React.FC<PokemonStatsProps> = ({ stats, color }) => {
     return (
         <View>
-            {stats?.map(stat => (
+            {stats?.map((stat) => (
                 <View key={stat.stat.name} style={styles.statBarRow}>
                     <Text style={styles.statName}>{stat.stat.name.toUpperCase()}</Text>
                     <Text style={styles.statNum}>{stat.base_stat}</Text>
