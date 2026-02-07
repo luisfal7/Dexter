@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { getEvolutionChain } from '../../../services';
+import { EvolutionChainNodeRaw, EvolutionDetail } from '../types';
 
 // Proper typing for EvolutionChainNode
 // Español: Tipado adecuado para EvolutionChainNode
 export interface EvolutionChainNode {
     id: string;
     name: string;
-    evolutionDetails: any[];
+    evolutionDetails: EvolutionDetail[];
     url: string;
 }
 
@@ -26,11 +27,11 @@ export const usePokemonEvolution = (evolutionUrl: string) => {
                 const data = await getEvolutionChain(evolutionUrl);
 
                 const chains: EvolutionChainNode[][] = [];
-                let evolutionData = data.chain;
+                let evolutionData: EvolutionChainNodeRaw = data.chain;
 
                 // Helper to explore the evolution tree
                 // Español: Auxiliar para explorar el árbol de evoluciones
-                const buildPaths = (node: any, currentPath: EvolutionChainNode[]) => {
+                const buildPaths = (node: EvolutionChainNodeRaw, currentPath: EvolutionChainNode[]) => {
                     const id = node.species.url.split('/')[6];
                     const pokemon: EvolutionChainNode = {
                         id: id,
@@ -44,7 +45,7 @@ export const usePokemonEvolution = (evolutionUrl: string) => {
                     if (node.evolves_to.length === 0) {
                         chains.push(newPath);
                     } else {
-                        node.evolves_to.forEach((child: any) => buildPaths(child, newPath));
+                        node.evolves_to.forEach((child) => buildPaths(child, newPath));
                     }
                 };
 
@@ -63,7 +64,7 @@ export const usePokemonEvolution = (evolutionUrl: string) => {
 
     // Format trigger string logic moved here
     // Español: Lógica de formato de string de gatillo movida aquí
-    const formatTriggerString = (detail: any) => {
+    const formatTriggerString = (detail: EvolutionDetail) => {
         const triggers: string[] = [];
 
         // Level Up

@@ -1,45 +1,27 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { usePokemonStore } from '../../../../store/usePokemonStore';
-import { getPokemonDetails, getPokemonSpecies } from '../../../../services';
+import { usePokemonDetails } from '../../hooks/usePokemonDetails';
 import PokemonDetailView from './PokemonDetailView';
+import { Pokemon } from '../../types';
 
+// English: Props for the container component
+// Español: Props para el componente contenedor
 interface PokemonDetailContentProps {
-    pokemon: {
-        id: number;
-        url: string;
-        name: string;
-    };
+    pokemon: Pokemon;
     color?: string;
     onBackPressed: () => void;
 }
 
+// English: Container component managing logic and state for details
+// Español: Componente contenedor gestionando lógica y estado para detalles
 const PokemonDetailContent: React.FC<PokemonDetailContentProps> = ({ pokemon, color, onBackPressed }) => {
-
-    const { isFavorite, toggleFavorite } = usePokemonStore();
-    const isFav = isFavorite(pokemon.id);
-
-    // Determine URL
-    let detailUrl = pokemon.url;
-    if (pokemon.id) {
-        detailUrl = `https://pokeapi.co/api/v2/pokemon/${pokemon.id}`;
-    } else if (pokemon.url && pokemon.url.includes('pokemon-species')) {
-        const parts = pokemon.url.split('/');
-        const id = parts[parts.length - 2];
-        detailUrl = `https://pokeapi.co/api/v2/pokemon/${id}`;
-    }
-
-    const { data: details, isLoading: loadingDetails } = useQuery({
-        queryKey: ['pokemonDetails', detailUrl],
-        queryFn: () => getPokemonDetails(detailUrl),
-        enabled: !!detailUrl,
-    });
-
-    const { data: species, isLoading: loadingSpecies } = useQuery({
-        queryKey: ['pokemonSpecies', details?.id],
-        queryFn: () => getPokemonSpecies(pokemon.id || details?.id),
-        enabled: !!details?.id || !!pokemon.id,
-    });
+    // English: Use the custom hook to get data and logic
+    // Español: Usar el hook personalizado para obtener datos y lógica
+    const {
+        details,
+        species,
+        isFavorite,
+        toggleFavorite
+    } = usePokemonDetails(pokemon);
 
     return (
         <PokemonDetailView
@@ -47,11 +29,8 @@ const PokemonDetailContent: React.FC<PokemonDetailContentProps> = ({ pokemon, co
             details={details}
             species={species}
             onBackPressed={onBackPressed}
-            isFavorite={isFav}
-            onToggleFavorite={() => toggleFavorite({
-                ...pokemon,
-                id: details?.id || pokemon.id // Ensure we have ID
-            })}
+            isFavorite={isFavorite}
+            onToggleFavorite={toggleFavorite}
         />
     );
 };

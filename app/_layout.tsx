@@ -1,3 +1,4 @@
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack } from 'expo-router';
 import { usePokemonStore } from '../src/store/usePokemonStore';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -12,18 +13,20 @@ import { colors } from '../src/theme';
 
 export default function RootLayout() {
     return (
-        <QueryClientProvider client={queryClient}>
-            <SafeAreaProvider>
-                <StatusBar style="dark" />
-                <Stack
-                    screenOptions={{
-                        headerShown: false,
-                        contentStyle: { backgroundColor: colors.background },
-                    }}
-                >
-                    <Stack.Screen name="index" />
-                </Stack>
-            </SafeAreaProvider>
-        </QueryClientProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <QueryClientProvider client={queryClient}>
+                <SafeAreaProvider>
+                    <StatusBar style="dark" />
+                    <Stack
+                        screenOptions={{
+                            headerShown: false,
+                            contentStyle: { backgroundColor: colors.background },
+                        }}
+                    >
+                        <Stack.Screen name="index" />
+                    </Stack>
+                </SafeAreaProvider>
+            </QueryClientProvider>
+        </GestureHandlerRootView>
     );
 }

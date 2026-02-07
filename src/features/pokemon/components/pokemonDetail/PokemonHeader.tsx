@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, StyleProp, ImageStyle } from 'react-native';
 import { Image } from 'expo-image';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import Animated from 'react-native-reanimated';
 import { colors, metrics } from '../../../../theme';
 
 const { width } = Dimensions.get('window');
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 interface PokemonHeaderProps {
     pokemon: {
@@ -21,9 +23,20 @@ interface PokemonHeaderProps {
     onBackPressed: () => void;
     isFavorite: boolean;
     onToggleFavorite: () => void;
+    imageStyle?: StyleProp<ImageStyle>;
 }
 
-const PokemonHeader: React.FC<PokemonHeaderProps> = ({ pokemon, details, backgroundColor, isShiny, setIsShiny, onBackPressed, isFavorite, onToggleFavorite }) => {
+const PokemonHeader: React.FC<PokemonHeaderProps> = ({
+    pokemon,
+    details,
+    backgroundColor,
+    isShiny,
+    setIsShiny,
+    onBackPressed,
+    isFavorite,
+    onToggleFavorite,
+    imageStyle
+}) => {
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${isShiny ? 'shiny/' : ''}${pokemon.id}.png`;
     const formattedId = `#${pokemon.id.toString().padStart(3, '0')}`;
 
@@ -34,9 +47,18 @@ const PokemonHeader: React.FC<PokemonHeaderProps> = ({ pokemon, details, backgro
                     <TouchableOpacity onPress={onBackPressed}>
                         <Ionicons name="arrow-back" size={28} color="white" />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={onToggleFavorite}>
-                        <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={28} color="white" />
-                    </TouchableOpacity>
+                    <View style={styles.rightNav}>
+                        <TouchableOpacity
+                            style={styles.shinyButton}
+                            onPress={() => setIsShiny(!isShiny)}
+                            activeOpacity={0.7}
+                        >
+                            <Ionicons name={isShiny ? "sunny" : "sunny-outline"} size={24} color={isShiny ? "#FFD700" : "white"} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onToggleFavorite}>
+                            <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={28} color="white" />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={styles.headerContent}>
                     <View>
@@ -54,18 +76,9 @@ const PokemonHeader: React.FC<PokemonHeaderProps> = ({ pokemon, details, backgro
                 <View style={styles.pokeballDecoration} />
             </SafeAreaView>
 
-            {/* Shiny Toggle Button */}
-            <TouchableOpacity
-                style={styles.shinyButton}
-                onPress={() => setIsShiny(!isShiny)}
-                activeOpacity={0.7}
-            >
-                <Ionicons name={isShiny ? "sunny" : "sunny-outline"} size={20} color={isShiny ? "#FFD700" : "white"} />
-            </TouchableOpacity>
-
             {/* Floating Image */}
             <View style={styles.imageContainer}>
-                <Image source={{ uri: imageUrl }} style={styles.image} contentFit="contain" />
+                <AnimatedImage source={{ uri: imageUrl }} style={[styles.image, imageStyle]} contentFit="contain" />
             </View>
         </View>
     );
@@ -81,7 +94,12 @@ const styles = StyleSheet.create({
     topNav: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
         marginTop: 10,
+    },
+    rightNav: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     headerContent: {
         flexDirection: 'row',
@@ -136,15 +154,10 @@ const styles = StyleSheet.create({
         height: 250,
     },
     shinyButton: {
-        position: 'absolute',
-        top: 300,
-        right: metrics.marginHorizontal,
-        zIndex: 10,
-        backgroundColor: 'rgba(255,255,255,0.2)',
+        marginRight: 15,
         padding: 5,
         borderRadius: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: 'rgba(255,255,255,0.2)',
     },
 });
 
