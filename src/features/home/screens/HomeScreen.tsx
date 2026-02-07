@@ -64,11 +64,11 @@ const HomeScreen: React.FC = () => {
                                 icon="heart"
                             />
                             <CategoryCard
-                                title="Locations"
-                                color="#7C538C"
+                                title="TOP Tier"
+                                color={colors.location}
                                 style={styles.card}
-                                onPress={() => { }} // Placeholder
-                                icon="map"
+                                onPress={() => router.push('/top-tier')}
+                                icon="trophy"
                             />
                         </View>
                         {/* 2x2 Grid maintained */}

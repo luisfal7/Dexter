@@ -1,32 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { colors, metrics } from '../../../theme';
 import CategoryCard from '../../home/components/CategoryCard';
 import { SearchBar } from '../../../components';
-import { getTypes } from '../../../services';
-
-const typeIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
-  normal: 'disc',
-  fire: 'flame',
-  water: 'water',
-  electric: 'flash',
-  grass: 'leaf',
-  ice: 'snow',
-  fighting: 'fitness',
-  poison: 'skull',
-  ground: 'planet',
-  flying: 'cloud',
-  psychic: 'eye',
-  bug: 'bug',
-  rock: 'cube',
-  ghost: 'happy', // Placeholder
-  dragon: 'logo-snapchat', // Placeholder (looks like a ghost/monster?)
-  steel: 'build',
-  fairy: 'star',
-  dark: 'moon',
-};
+import { POKEMON_TYPE_ICONS, DEFAULT_TYPE_ICON } from '../constants/pokemonTypeIcons';
 
 import { useRouter } from 'expo-router';
 
@@ -46,6 +25,7 @@ const TypeListScreen: React.FC = () => {
     // In a real app we would fetch from API, but for UI speed/reliability in demo 
     // and because colors/icons are hardcoded, I'll generate the list from the colors map first
     // then maybe verify with API if needed. For now, static list is better for the visual task.
+    // Español: En una app real haríamos fetch, pero para demo usamos lista estática basada en colores
     const staticTypes = Object.keys(colors.types).map(type => ({
       name: type,
       url: `https://pokeapi.co/api/v2/type/${type}`
@@ -57,14 +37,14 @@ const TypeListScreen: React.FC = () => {
   const renderItem = ({ item }: { item: TypeItem }) => {
     const colorKey = item.name as keyof typeof colors.types;
     const color = colors.types[colorKey] ?? colors.grey;
-    const iconKey = item.name as keyof typeof typeIcons;
-    const icon = typeIcons[iconKey] ?? 'ellipse';
+    const icon = POKEMON_TYPE_ICONS[item.name] ?? DEFAULT_TYPE_ICON;
 
     return (
       <CategoryCard
         title={item.name.charAt(0).toUpperCase() + item.name.slice(1)}
         color={color}
         icon={icon}
+        IconComponent={MaterialCommunityIcons}
         style={styles.card}
         onPress={() => router.push({
           pathname: '/pokemon/list',

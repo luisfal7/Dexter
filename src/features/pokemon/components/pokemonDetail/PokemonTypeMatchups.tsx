@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../../../../theme';
 import { getTypeDetails } from '../../../../services';
+import { POKEMON_TYPE_ICONS, DEFAULT_TYPE_ICON } from '../../constants/pokemonTypeIcons';
 
 interface PokemonTypeMatchupsProps {
     types: { type: { name: string; url: string } }[];
@@ -102,30 +103,9 @@ const PokemonTypeMatchups: React.FC<PokemonTypeMatchupsProps> = ({ types }) => {
 
     if (!types) return null;
 
-    // Mapping based on the visual style of Pokemon types
-    const getIconName = (type: string): any => {
-        switch (type) {
-            case 'fire': return 'fire';
-            case 'water': return 'water';
-            case 'electric': return 'flash';
-            case 'grass': return 'leaf';
-            case 'ice': return 'snowflake';
-            case 'fighting': return 'boxing-glove';
-            case 'poison': return 'skull';
-            case 'ground': return 'terrain';
-            case 'flying': return 'feather';
-            case 'psychic': return 'debian';
-            case 'bug': return 'ladybug';
-            case 'rock': return 'cube';
-            case 'ghost': return 'ghost';
-            case 'dragon': return 'snake';
-            case 'steel': return 'nut';
-            case 'fairy': return 'star-four-points';
-            case 'normal': return 'circle-outline';
-            case 'dark': return 'moon-waning-crescent';
-            default: return 'help';
-        }
-    };
+
+
+    // ...
 
     const renderTypeRow = (title: string, typeList: string[]) => {
         if (!typeList || typeList.length === 0) return null;
@@ -135,9 +115,10 @@ const PokemonTypeMatchups: React.FC<PokemonTypeMatchupsProps> = ({ types }) => {
                 <View style={styles.typeRow}>
                     {typeList.map((type, index) => {
                         const colorKey = type as keyof typeof colors.types;
+                        const iconName = POKEMON_TYPE_ICONS[type] || DEFAULT_TYPE_ICON;
                         return (
                             <View key={index} style={[styles.typePill, { backgroundColor: colors.types[colorKey] || colors.grey }]}>
-                                <MaterialCommunityIcons name={getIconName(type)} size={16} color="white" />
+                                <MaterialCommunityIcons name={iconName} size={16} color="white" />
                             </View>
                         );
                     })}

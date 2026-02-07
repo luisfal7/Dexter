@@ -7,11 +7,12 @@ interface CategoryCardProps {
     title: string;
     color: string;
     onPress: () => void;
-    icon?: keyof typeof Ionicons.glyphMap | null;
+    icon?: string | null;
+    IconComponent?: any;
     style?: StyleProp<ViewStyle>;
 }
 
-const CategoryCard: React.FC<CategoryCardProps> = ({ title, color, onPress, style, icon }) => {
+const CategoryCard: React.FC<CategoryCardProps> = ({ title, color, onPress, style, icon, IconComponent = Ionicons }) => {
     return (
         <TouchableOpacity
             activeOpacity={0.8}
@@ -23,7 +24,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ title, color, onPress, styl
             <View style={styles.content}>
                 <Text style={styles.title}>{title}</Text>
                 {icon && <View style={styles.iconContainer}>
-                    <Ionicons name={icon} size={24} color="rgba(255,255,255,0.4)" />
+                    <IconComponent name={icon} size={24} color="rgba(255,255,255,0.4)" />
                 </View>}
             </View>
             <ImageOverlay />

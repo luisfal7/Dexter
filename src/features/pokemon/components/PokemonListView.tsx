@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     columnWrapper: {
-        justifyContent: 'space-between',
+        gap: 10,
     },
     loadingContainer: {
         flex: 1,

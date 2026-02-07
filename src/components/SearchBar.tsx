@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, ScrollView, Text, TouchableOpacity, Keyboard, Image, StyleProp, ViewStyle } from 'react-native';
+import { View, TextInput, StyleSheet, ScrollView, Text, TouchableOpacity, Keyboard, Image, StyleProp, ViewStyle, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { colors, metrics } from '../theme';
@@ -17,10 +17,15 @@ interface SearchResult {
     imageUrl: string;
 }
 
+interface BasicPokemon {
+    name: string;
+    url: string;
+}
+
 const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search Pokemon name or ID", style }) => {
     const router = useRouter();
     const [searchText, setSearchText] = useState('');
-    const [allPokemons, setAllPokemons] = useState<any[]>([]); // English: API returns raw objects initially | Español: La API retorna objetos crudos inicialmente
+    const [allPokemons, setAllPokemons] = useState<BasicPokemon[]>([]);
     const [filteredResults, setFilteredResults] = useState<SearchResult[]>([]);
     const [showDropdown, setShowDropdown] = useState(false);
 
@@ -46,26 +51,36 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search Pokemon nam
 
         const lowerText = text.toLowerCase();
 
-        // English: Filter logic: Name or ID
-        // Español: Lógica de filtrado: Nombre o ID
-        const filtered = allPokemons.filter((p: any) => {
-            const urlParts = p.url.split('/');
-            const id = urlParts[urlParts.length - 2];
-            return p.name.toLowerCase().includes(lowerText) || id.includes(lowerText);
-        }).map((p: any) => {
-            // English: Map to useful object
-            // Español: Mapear a objeto útil
-            const urlParts = p.url.split('/');
-            const id = urlParts[urlParts.length - 2];
-            return {
-                name: p.name,
-                url: p.url,
-                id: parseInt(id),
-                imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png` // English: Small sprite for list | Español: Sprite pequeño para lista
-            };
-        });
+        // Filter and sort by relevance
+        // Español: Filtrar y ordenar por relevancia
+        const filtered = allPokemons
+            .filter((p) => {
+                const urlParts = p.url.split('/');
+                const id = urlParts[urlParts.length - 2];
+                return p.name.toLowerCase().includes(lowerText) || id.includes(lowerText);
+            })
+            .sort((a, b) => {
+                // Prioritize "starts with"
+                const startsWithA = a.name.toLowerCase().startsWith(lowerText);
+                const startsWithB = b.name.toLowerCase().startsWith(lowerText);
+                if (startsWithA && !startsWithB) return -1;
+                if (!startsWithA && startsWithB) return 1;
+                return 0;
+            })
+            .map((p) => {
+                const urlParts = p.url.split('/');
+                const id = urlParts[urlParts.length - 2];
+                return {
+                    name: p.name,
+                    url: p.url,
+                    id: parseInt(id),
+                    imageUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+                };
+            });
 
-        setFilteredResults(filtered);
+        // Limit to 20 results for performance
+        // Español: Limitar a 20 resultados para rendimiento
+        setFilteredResults(filtered.slice(0, 20));
         setShowDropdown(true);
     };
 
@@ -107,16 +122,19 @@ const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search Pokemon nam
 
             {/* English: Dropdown Overlay | Español: Superposición desplegable */}
             {showDropdown && filteredResults.length > 0 && (
-                <View style={styles.dropdown}>
+                <View
+                    style={styles.dropdown}
+                    onStartShouldSetResponder={() => true}
+                >
                     <ScrollView
                         style={styles.list}
+                        contentContainerStyle={{ flexGrow: 1 }}
                         keyboardShouldPersistTaps="handled"
                         nestedScrollEnabled={true}
+                        showsVerticalScrollIndicator={true}
                     >
-                        {/* English: Render ALL results. MaxHeight effectively limits view to ~6 items, user scrolls for more */}
-                        {/* Español: Renderizar TODOS los resultados. MaxHeight limita efectivamente la vista a ~6 elementos, el usuario se desplaza para ver más */}
                         {filteredResults.map((item) => (
-                            <TouchableOpacity key={item.name} style={styles.item} onPress={() => handleSelect(item)}>
+                            <TouchableOpacity key={item.id} style={styles.item} onPress={() => handleSelect(item)}>
                                 <Image source={{ uri: item.imageUrl }} style={styles.itemImage} />
                                 <Text style={styles.itemText}>
                                     #{item.id.toString().padStart(3, '0')} {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
@@ -164,6 +182,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         maxHeight: 350, // Constrain height to avoid going off screen too much
         zIndex: 1000,
+        overflow: 'hidden', // Enforce rounded corners
     },
     list: {
         flex: 1, // Fill the dropdown view
@@ -187,22 +206,6 @@ const styles = StyleSheet.create({
         color: colors.text,
         textTransform: 'capitalize'
     },
-    showMoreButton: {
-        padding: 12,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f9f9f9',
-        borderTopWidth: 1,
-        borderTopColor: '#eee',
-        flexDirection: 'row'
-    },
-    showMoreText: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: colors.textLight,
-        marginRight: 5,
-        opacity: 0.7
-    }
 });
 
 export default SearchBar;
