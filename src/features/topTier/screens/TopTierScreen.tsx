@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity }
 import { Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, metrics } from '../../../theme';
-import { useTopTierPokemon, TopTierPokemon } from '../hooks/useTopTierPokemon';
+import { useTopTierPokemon } from '../hooks/useTopTierPokemon';
+import { TopTierPokemon } from '../types';
 import TopTierItem from '../components/TopTierItem';
 
 // Screen component for Top Tier feature

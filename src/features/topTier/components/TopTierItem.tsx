@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { Image } from 'expo-image';
 import { colors, metrics } from '../../../theme';
-import { TopTierPokemon } from '../hooks/useTopTierPokemon';
+import { TopTierPokemon } from '../types';
 
 interface TopTierItemProps {
     item: TopTierPokemon;
