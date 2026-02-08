@@ -33,7 +33,7 @@ export const usePokemonNews = () => {
                 if (rss.items && rss.items.length > 0) {
                     // English: Map and slice safely
                     // Español: Mapear y recortar de forma segura
-                    const mappedItems: NewsItem[] = rss.items.slice(0, 5).map(item => ({
+                    const mappedItems: NewsItem[] = rss.items.slice(0, 10).map(item => ({
                         title: item.title || 'No Title',
                         published: item.published || new Date().toISOString(),
                         links: item.links && item.links.length > 0 ? [{ url: item.links[0].url }] : [{ url: 'https://pokemon.com' }]
