@@ -1,3 +1,5 @@
+// English: Constant defining the Pokemon generations and their starters
+// Español: Constante que define las generaciones de Pokemon y sus iniciales
 export const GENERATIONS = [
     {
         id: 1,
@@ -77,6 +79,16 @@ export const GENERATIONS = [
             { id: 810, image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/810.png' },
             { id: 813, image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/813.png' },
             { id: 816, image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/816.png' }
+        ]
+    },
+    {
+        id: 9,
+        name: 'Generation IX',
+        region: 'Paldea',
+        starters: [
+            { id: 906, image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/906.png' },
+            { id: 909, image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/909.png' },
+            { id: 912, image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/912.png' }
         ]
     }
 ];
