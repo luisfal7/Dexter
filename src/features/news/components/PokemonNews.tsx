@@ -1,118 +1,88 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Linking } from 'react-native';
+import React, { useMemo, useRef } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Linking, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
-import * as rssParser from 'react-native-rss-parser';
 import { useRouter } from 'expo-router';
+import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { colors, metrics } from '../../../theme';
-// ... imports
+import { usePokemonNews, NewsItem } from '../hooks/usePokemonNews';
 
+const { width } = Dimensions.get('window');
+
+// English: Component to display Pokemon news in a Bottom Sheet
+// Español: Componente para mostrar noticias de Pokemon en una hoja inferior
 const PokemonNews = () => {
-    const router = useRouter(); // Use router
-    const [news, setNews] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const router = useRouter();
+    const { news, loading } = usePokemonNews();
+    const bottomSheetRef = useRef<BottomSheet>(null);
 
-    const GOOGLE_NEWS_RSS_URL = 'https://news.google.com/rss/search?q=Pokemon&hl=en-US&gl=US&ceid=US:en';
-
-    useEffect(() => {
-        const fetchNews = async () => {
-            try {
-                // Time-boxed fetch
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-                const response = await fetch(GOOGLE_NEWS_RSS_URL, { signal: controller.signal });
-                clearTimeout(timeoutId);
-
-                const responseText = await response.text();
-                const rss = await rssParser.parse(responseText);
-
-                if (rss.items && rss.items.length > 0) {
-                    setNews(rss.items.slice(0, 5));
-                } else {
-                    throw new Error("No items found");
-                }
-            } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : String(error);
-                console.warn("News fetch failed, using fallback:", errorMessage);
-                setNews([
-                    {
-                        title: "Pokemon Legends: Z-A Announced for 2025",
-                        published: new Date().toISOString(),
-                        links: [{ url: "https://www.pokemon.com/us" }]
-                    },
-                    {
-                        title: "New Mystery Gift Code Available for Scarlet & Violet",
-                        published: new Date(Date.now() - 86400000).toISOString(),
-                        links: [{ url: "https://www.pokemon.com/us" }]
-                    },
-                    {
-                        title: "Pokemon GO Community Day: Chansey",
-                        published: new Date(Date.now() - 172800000).toISOString(),
-                        links: [{ url: "https://pokemongolive.com" }]
-                    }
-                ]);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchNews();
-    }, []);
+    // English: Snap points for the bottom sheet (25% and 90%)
+    // Español: Puntos de ajuste para la hoja inferior (25% y 90%)
+    const snapPoints = useMemo(() => ['25%', '90%'], []);
 
     const handlePress = (url: string) => {
         Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
     };
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Pokemon News</Text>
-                <Text style={styles.viewAll} onPress={() => router.push('/news')}>View All</Text>
+    const renderItem = ({ item }: { item: NewsItem }) => (
+        <TouchableOpacity style={styles.newsItem} onPress={() => handlePress(item.links[0].url)}>
+            <View style={styles.newsContent}>
+                <Text style={styles.newsHeadline} numberOfLines={2}>{item.title}</Text>
+                <Text style={styles.newsDate}>{new Date(item.published).toDateString()}</Text>
             </View>
+            <View style={styles.newsImagePlaceholder}>
+                <Image
+                    style={styles.newsImage}
+                    source={{ uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png' }}
+                    contentFit="contain"
+                />
+            </View>
+        </TouchableOpacity>
+    );
 
-            {loading ? (
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color={colors.primary} />
+    return (
+        <BottomSheet
+            ref={bottomSheetRef}
+            index={0}
+            snapPoints={snapPoints}
+            enablePanDownToClose={false}
+            backgroundStyle={{ backgroundColor: '#fff', borderRadius: 30 }}
+            handleIndicatorStyle={{ backgroundColor: colors.grey }}
+        >
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>Pokemon News</Text>
+                    <Text style={styles.viewAll} onPress={() => router.push('/news')}>View All</Text>
                 </View>
-            ) : news.length === 0 ? (
-                <View style={styles.loadingContainer}>
-                    <Text style={{ textAlign: 'center', color: colors.grey, marginTop: 10 }}>No news found.</Text>
-                </View>
-            ) : (
-                news.map((item, index) => (
-                    <TouchableOpacity key={index} style={styles.newsItem} onPress={() => handlePress(item.links[0].url)}>
-                        <View style={styles.newsContent}>
-                            <Text style={styles.newsHeadline} numberOfLines={2}>{item.title}</Text>
-                            <Text style={styles.newsDate}>{new Date(item.published).toDateString()}</Text>
-                        </View>
-                        <View style={styles.newsImagePlaceholder}>
-                            <Image
-                                style={styles.newsImage}
-                                source={{ uri: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png' }}
-                                contentFit="contain"
-                            />
-                        </View>
-                    </TouchableOpacity>
-                ))
-            )}
-        </View >
+
+                {loading ? (
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator size="large" color={colors.primary} />
+                    </View>
+                ) : (
+                    <BottomSheetFlatList
+                        data={news}
+                        keyExtractor={(_: any, index: number) => index.toString()}
+                        renderItem={renderItem}
+                        contentContainerStyle={styles.listContent}
+                        showsVerticalScrollIndicator={false}
+                    />
+                )}
+            </View>
+        </BottomSheet>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 10,
-    },
-    loadingContainer: {
-        height: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
+        flex: 1,
+        paddingHorizontal: metrics.marginHorizontal,
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 15,
+        marginTop: 5,
     },
     title: {
         fontSize: 20,
@@ -123,19 +93,24 @@ const styles = StyleSheet.create({
         color: colors.tertiary,
         fontWeight: 'bold',
     },
+    loadingContainer: {
+        height: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    listContent: {
+        paddingBottom: 20,
+    },
     newsItem: {
-        backgroundColor: 'white',
+        backgroundColor: '#fff', // Or slightly different to distinguish from sheet bg
         borderRadius: 15,
         padding: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-        elevation: 3,
-        marginBottom: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+        marginBottom: 10,
     },
     newsContent: {
         flex: 1,
@@ -160,7 +135,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     newsImage: {
-        width: 30, // Pokeball icon size
+        width: 30,
         height: 30,
         opacity: 0.5,
     }

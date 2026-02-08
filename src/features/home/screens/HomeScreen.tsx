@@ -74,7 +74,7 @@ const HomeScreen: React.FC = () => {
                         {/* 2x2 Grid maintained */}
                     </View>
 
-                    <PokemonNews />
+
 
                     <TouchableOpacity style={styles.policyButton} onPress={() => router.push('/privacy')}>
                         <Text style={styles.policyText}>Privacy Policy</Text>
@@ -82,6 +82,7 @@ const HomeScreen: React.FC = () => {
 
                 </ScrollView>
             </SafeAreaView>
+            <PokemonNews />
         </View>
     );
 };
