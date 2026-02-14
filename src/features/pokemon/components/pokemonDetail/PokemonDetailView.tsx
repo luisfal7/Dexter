@@ -19,6 +19,8 @@ import PokemonStats from './PokemonStats';
 import PokemonMoves from './PokemonMoves';
 import PokemonEvolution from './PokemonEvolution';
 import PokemonTypeMatchups from './PokemonTypeMatchups';
+import PokemonCoach from './PokemonCoach';
+import { coachTips } from '../../data/coach_tips';
 
 import { Pokemon, PokemonDetails, PokemonSpecies } from '../../types';
 
@@ -90,7 +92,7 @@ const PokemonDetailView: React.FC<PokemonDetailViewProps> = ({
 
     // English: Tab switching logic
     // Español: Lógica de cambio de pestañas
-    const tabs = ['About', 'Stats', 'Moves'];
+    const tabs = ['About', 'Stats', 'Moves', 'Coach'];
 
     const handleTabChange = (direction: 'next' | 'prev') => {
         const currentIndex = tabs.indexOf(activeTab);
@@ -239,6 +241,15 @@ const PokemonDetailView: React.FC<PokemonDetailViewProps> = ({
                     />
                 );
                 break;
+            case 'Coach':
+                const tipKey = pokemon.name.toLowerCase();
+                const tip = (coachTips as Record<string, string>)[tipKey];
+                content = (
+                    <PokemonCoach
+                        tip={tip}
+                    />
+                );
+                break;
             default:
                 content = null;
         }
@@ -306,7 +317,7 @@ const PokemonDetailView: React.FC<PokemonDetailViewProps> = ({
                     <View style={styles.handleIndicator} />
 
                     <View style={styles.tabContainer}>
-                        {['About', 'Stats', 'Moves'].map(tab => (
+                        {['About', 'Stats', 'Moves', 'Coach'].map(tab => (
                             <TouchableOpacity
                                 key={tab}
                                 onPress={() => setActiveTab(tab)}
