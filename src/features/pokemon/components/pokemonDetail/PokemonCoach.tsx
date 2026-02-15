@@ -12,52 +12,21 @@ interface PokemonCoachProps {
 // Español: Componente para mostrar el consejo estratégico del entrenador
 const PokemonCoach: React.FC<PokemonCoachProps> = ({ tip }) => {
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>VGC Coach Tip</Text>
-            <View style={styles.card}>
-                <Text style={styles.tipText}>
-                    {tip || "No strategic tip available for this Pokémon yet."}
-                </Text>
-            </View>
+        <View>
+            <Text style={styles.description}>
+                {tip || "No strategic tip available for this Pokémon yet."}
+            </Text>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        paddingHorizontal: 20,
-        paddingTop: 20,
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: 'bold',
+    description: {
+        lineHeight: 22,
         color: colors.text,
-        marginBottom: 15,
-        alignSelf: 'flex-start',
+        marginBottom: 20,
     },
-    card: {
-        backgroundColor: '#f5f5f5',
-        borderRadius: 15,
-        padding: 20,
-        width: '100%',
-        borderLeftWidth: 5,
-        borderLeftColor: colors.primary,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
-    tipText: {
-        fontSize: 16,
-        color: '#333',
-        lineHeight: 24,
-        fontStyle: 'italic',
-    }
+    /* tipText removed as requested */
 });
 
 export default PokemonCoach;

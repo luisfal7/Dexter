@@ -16,10 +16,11 @@ process.on('unhandledRejection', (reason, promise) => {
 
 // Configuration
 const API_KEY = process.env.GEMINI_API_KEY;
-const OUTPUT_FILE = path.join(__dirname, '../src/features/pokemon/data/coach_tips.ts');
-const REQUESTS_PER_MINUTE = 15;
-const REQUEST_DELAY_MS = Math.ceil(60000 / REQUESTS_PER_MINUTE); // 4000ms
-const MODEL_NAME = "gemini-2.5-flash";
+const OUTPUT_FILE_TS = path.join(__dirname, '../src/features/pokemon/data/coach_tips.ts');
+const OUTPUT_FILE_JSON = path.join(__dirname, '../src/features/pokemon/data/coach_tips.json');
+const MODEL_NAME = "gemini-2.0-flash"; // Keeping 1.5-flash as it is more stable for free tier
+const BATCH_SIZE = 1; // ⚠️ IMPORTANTE: Solo 1 a la vez
+const DELAY_MS = 10000; // 10 segundos de descanso entre cada uno. Baja el lote a 1. Así el prompt es cortito y no rompes el límite de tokens.
 
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -48,9 +49,9 @@ async function generateAllTips() {
 
     // Load existing tips
     let tips = {};
-    if (fs.existsSync(OUTPUT_FILE)) {
+    if (fs.existsSync(OUTPUT_FILE_TS)) {
         try {
-            const content = fs.readFileSync(OUTPUT_FILE, 'utf8');
+            const content = fs.readFileSync(OUTPUT_FILE_TS, 'utf8');
             // Extract content between curly braces
             const match = content.match(/export const coachTips: Record<string, string> = {([\s\S]*?)};/);
             if (match && match[1]) {
@@ -117,14 +118,17 @@ Style Rules:
 
                 // Save immediately in TS format
                 let tsContent = 'export const coachTips: Record<string, string> = {\n';
-                // iterate tips
                 for (const [k, v] of Object.entries(tips)) {
                     // Escape backticks in value
                     tsContent += `  "${k}": \`${v.replace(/`/g, '\\`')}\`,\n`;
                 }
                 tsContent += '};\n';
 
-                fs.writeFileSync(OUTPUT_FILE, tsContent);
+                // Save immediately in JSON format
+                const jsonContent = JSON.stringify(tips, null, 2);
+
+                fs.writeFileSync(OUTPUT_FILE_TS, tsContent);
+                fs.writeFileSync(OUTPUT_FILE_JSON, jsonContent);
 
                 console.log(`${progressStr} ✅ Estrategia guardada para ${pokemon.charAt(0).toUpperCase() + pokemon.slice(1)}.`);
                 success = true;
@@ -141,8 +145,13 @@ Style Rules:
             console.error(`${progressStr} ❌ Failed to generate for ${pokemon} after retries.`);
         }
 
-        // Rate limit delay
-        await sleep(REQUEST_DELAY_MS);
+        if (success) {
+            // Wait for a bit before the next request
+            await sleep(DELAY_MS);
+        } else {
+            // Exponential backoff or just wait a bit longer on error
+            await sleep(DELAY_MS * 2);
+        }
     }
 
     console.log("Generation process completed.");

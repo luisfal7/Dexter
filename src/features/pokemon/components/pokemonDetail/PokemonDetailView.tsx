@@ -245,9 +245,11 @@ const PokemonDetailView: React.FC<PokemonDetailViewProps> = ({
                 const tipKey = pokemon.name.toLowerCase();
                 const tip = (coachTips as Record<string, string>)[tipKey];
                 content = (
-                    <PokemonCoach
-                        tip={tip}
-                    />
+                    <View style={styles.scrollContent}>
+                        <PokemonCoach
+                            tip={tip}
+                        />
+                    </View>
                 );
                 break;
             default:
